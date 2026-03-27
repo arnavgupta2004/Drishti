@@ -1,6 +1,1 @@
-{
-  "/api/market/pulse/route": "app/api/market/pulse/route.js",
-  "/page": "app/page.js",
-  "/api/stock/[ticker]/route": "app/api/stock/[ticker]/route.js",
-  "/api/signals/route": "app/api/signals/route.js"
-}
+{}
