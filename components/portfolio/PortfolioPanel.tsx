@@ -1,12 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Plus, Activity, Loader2, Wallet, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { isValidNSETicker } from '@/lib/nse-tickers'
 import type { Holding, PortfolioHealthScore } from '@/types'
-import { DEMO_PORTFOLIO_SCORE } from '@/lib/demo-data'
 import HoldingRow from './HoldingRow'
 import HealthScore from './HealthScore'
 
@@ -26,6 +25,16 @@ export default function PortfolioPanel() {
 
   const totalPnl = portfolio.total_pnl
   const totalPnlPct = portfolio.total_pnl_pct
+
+  // Reset cached health score whenever holdings change (add/remove)
+  // so user never sees stale results from a previous portfolio composition
+  const prevHoldingsCount = useRef(holdings.length)
+  useEffect(() => {
+    if (holdings.length !== prevHoldingsCount.current) {
+      prevHoldingsCount.current = holdings.length
+      setHealthScore(null)
+    }
+  }, [holdings.length])
 
   // Validate ticker: instant check against known list, then API for unknowns
   const validateTicker = async (ticker: string) => {
@@ -106,8 +115,7 @@ export default function PortfolioPanel() {
         setTab('health')
       }
     } catch {
-      setHealthScore(DEMO_PORTFOLIO_SCORE)
-      setTab('health')
+      // API failed — silently swallow, user sees the "Run Health Check" button again
     } finally {
       setHealthLoading(false)
     }

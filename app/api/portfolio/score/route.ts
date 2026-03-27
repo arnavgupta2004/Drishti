@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPortfolioScore } from '@/lib/claude'
 import { calcPortfolio, getSectorAllocation, getConcentrationRisks } from '@/lib/portfolio'
-import { DEMO_HOLDINGS } from '@/lib/portfolio'
 import type { Holding, PortfolioHealthScore } from '@/types'
 
 export const runtime = 'nodejs'
@@ -202,16 +201,17 @@ async function getGroqScore(summary: string): Promise<Pick<PortfolioHealthScore,
 // ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
-  const { holdings: rawHoldings = [], isDemoMode = false } = await req.json() as { holdings: Holding[]; isDemoMode: boolean }
+  const { holdings: rawHoldings = [] } = await req.json() as { holdings: Holding[]; isDemoMode: boolean }
 
-  // Use actual holdings (or demo holdings in demo mode)
-  const holdings: Holding[] = isDemoMode ? DEMO_HOLDINGS : rawHoldings
+  // Always use the actual holdings sent from the client — never override with demo data.
+  // isDemoMode only affected the old hardcoded path; the rule-based scorer handles any input correctly.
+  const holdings: Holding[] = rawHoldings
 
   // Always compute rule-based score as baseline (uses actual portfolio data)
   const ruleScore = computeRuleBasedScore(holdings)
 
-  // If empty and not demo mode, just return rule-based for empty portfolio
-  if (!isDemoMode && holdings.length === 0) {
+  // If portfolio is empty, return a clear "no holdings" response
+  if (holdings.length === 0) {
     return NextResponse.json({
       score: {
         score: 50,
