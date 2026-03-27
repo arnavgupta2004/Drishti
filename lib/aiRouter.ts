@@ -127,17 +127,23 @@ export async function extractQueryIntent(rawQuery: string): Promise<QueryIntent>
 
   try {
     const raw = await groqChat(
-      `You are a financial query parser for Indian stock markets (NSE/BSE).
-Extract structured intent from user queries. Respond ONLY with a JSON object.
+      `You are an expert financial query parser for Indian stock markets (NSE/BSE).
+Your job: extract the NSE ticker symbol for ANY Indian company mentioned, using your complete knowledge of all NSE/BSE listed stocks.
 
-Rules:
-- ticker: NSE symbol if mentioned (RELIANCE, HDFCBANK, TCS, INFY, ZOMATO, TITAN, ICICIBANK, SBIN, WIPRO, BAJFINANCE, MARUTI, SUNPHARMA, ADANIPORTS, NTPC, AIRTEL, HCLTECH, TECHM, LT, DRREDDY, CIPLA, ITC, KOTAKBANK, AXISBANK, ONGC etc.), else null
-- intent: clean English reformulation (remove filler, keep financial meaning)
-- isHinglish: true if query contains Hindi/Hinglish words`,
+TICKER RULES — be comprehensive:
+- Map company names, brand names, products, subsidiaries to their NSE parent ticker
+- Examples: "Tanishq" → TITAN, "Jio" → RELIANCE, "Fevicol" → PIDILITIND, "Royal Enfield" → EICHERMOT, "Croma" → TATACONSUM, "Star Health" → STARHEALTH, "Paytm" → PAYTM, "Nykaa" → NYKAA, "Swiggy" → SWIGGY, "Ola Electric" → OLAELEC, "PB Fintech" → POLICYBZR, "Delhivery" → DELHIVERY, "Mamaearth" → HONASA, "Go Digit" → GODIGIT
+- For banking: "Punjab National Bank" → PNB, "Bank of Baroda" → BANKBARODA, "Canara Bank" → CANARABANK, "Union Bank" → UNIONBANK
+- For PSUs: "BHEL" → BHEL, "HAL" → HAL, "IRCTC" → IRCTC, "RVNL" → RVNL, "IRFC" → IRFC, "HUDCO" → HUDCO
+- For mid/small caps: use your complete NSE knowledge to find the right symbol
+- If a company is NOT listed on NSE/BSE (e.g. Zerodha, Grofers, Dunzo), set ticker to "UNLISTED:<company_name>"
+- If no company is mentioned at all, set ticker to null
+- intent: clean English reformulation removing Hindi/Hinglish filler words
+- isHinglish: true if query has Hindi/Hinglish words`,
       `Query: "${rawQuery}"
 
-Respond with ONLY this JSON (no markdown):
-{"ticker": "<NSE_SYMBOL or null>", "intent": "<clean English intent>", "isHinglish": <true/false>}`
+Respond with ONLY this JSON (no markdown, no explanation):
+{"ticker": "<NSE_SYMBOL, UNLISTED:<name>, or null>", "intent": "<clean English intent>", "isHinglish": <true/false>}`
     )
 
     const match = raw.match(/\{[\s\S]*?\}/)

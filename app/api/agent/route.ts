@@ -41,16 +41,28 @@ export async function POST(req: NextRequest) {
             })}\n\n`)
           }
 
-          // Build enriched query for Claude — add ticker context if extracted
-          const enrichedQuery = intent?.ticker
-            ? `[EXTRACTED TICKER: ${intent.ticker}] [HINGLISH: ${intent.isHinglish}]\n\nUser query: ${query}\n\nClean intent: ${intent.intent}`
-            : query
+          // Handle unlisted companies — Groq returns "UNLISTED:<name>" prefix
+          const ticker = intent?.ticker ?? null
+          const isUnlisted = typeof ticker === 'string' && ticker.startsWith('UNLISTED:')
+          const companyName = isUnlisted ? ticker.replace('UNLISTED:', '').trim() : null
 
-          // ── Main pipeline: Claude 4-agent loop ──────────────────────────
-          emit(routingDecisionSSE('4-agent analysis', 'claude', 'Deep reasoning pipeline'))
+          if (isUnlisted && companyName) {
+            emit(routingDecisionSSE('4-agent analysis', 'groq', `${companyName} — not listed on NSE/BSE`))
+            const unlistedReply = `${companyName} is not listed on NSE or BSE.\n\nDRISHTI covers only publicly traded stocks on Indian exchanges. ${companyName} is either:\n• Privately held (e.g. Zerodha, boAt, OYO)\n• Listed on a foreign exchange\n• An upcoming IPO\n\nIf an IPO is expected, I can track it in the Video Engine → IPO Tracker once it lists.\n\nTry asking about a listed stock — RELIANCE, HDFCBANK, TCS, ZOMATO, NYKAA, PAYTM, SWIGGY, DELHIVERY, or any NSE-listed company.`
+            emit(`data: ${JSON.stringify({ type: 'final', content: unlistedReply })}\n\n`)
+            emit(`data: [DONE]\n\n`)
+          } else {
+            // Build enriched query for Claude — add ticker context if extracted
+            const enrichedQuery = ticker
+              ? `[EXTRACTED TICKER: ${ticker}] [HINGLISH: ${intent?.isHinglish ?? false}]\n\nUser query: ${query}\n\nClean intent: ${intent?.intent ?? query}`
+              : query
 
-          for await (const chunk of runAgentLoop(enrichedQuery, portfolio, isDemoMode, language)) {
-            emit(chunk)
+            // ── Main pipeline: Claude 4-agent loop ──────────────────────────
+            emit(routingDecisionSSE('4-agent analysis', 'claude', 'Deep reasoning pipeline'))
+
+            for await (const chunk of runAgentLoop(enrichedQuery, portfolio, isDemoMode, language)) {
+              emit(chunk)
+            }
           }
         } catch (err) {
           const errMsg = err instanceof Error ? err.message : 'Unknown error'
