@@ -211,7 +211,7 @@ export default function VideoEngine({ onClose }: { onClose: () => void }) {
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
-      style={{ background: '#070B14' }}
+      style={{ background: '#070B14', fontFamily: "'Inter', -apple-system, sans-serif" }}
     >
       {/* Header */}
       <div

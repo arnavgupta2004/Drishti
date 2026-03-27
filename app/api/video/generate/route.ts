@@ -113,11 +113,54 @@ function getDefaultScript(type: string, marketData: ReturnType<typeof getDemoMar
   return scripts[type] ?? scripts.market_wrap
 }
 
+// Fetch live market data from the existing /api/market/pulse endpoint
+async function getLiveMarketData(req: NextRequest): Promise<ReturnType<typeof getDemoMarketData>> {
+  try {
+    const base = req.nextUrl.origin
+    const res = await fetch(`${base}/api/market/pulse`, {
+      headers: { 'Cache-Control': 'no-store' },
+      signal: AbortSignal.timeout(8000),
+    })
+    if (!res.ok) return getDemoMarketData()
+    const pulse = await res.json() as {
+      indices?: { name: string; value: number; change_pct: number }[]
+      gainers?: { ticker: string; name?: string; change_pct: number }[]
+      losers?: { ticker: string; name?: string; change_pct: number }[]
+      fii_net?: number
+      dii_net?: number
+    }
+
+    // Map pulse format → video format
+    const indices = (pulse.indices ?? [])
+      .filter(i => i.value > 0)
+      .slice(0, 4)
+      .map(i => ({ name: i.name, value: i.value, change_pct: i.change_pct }))
+
+    if (indices.length < 2) return getDemoMarketData()   // Live data not ready yet
+
+    return {
+      indices: indices.length >= 4 ? indices : [...indices, ...getDemoMarketData().indices.slice(indices.length)],
+      gainers: (pulse.gainers ?? []).filter(g => g.change_pct > 0).slice(0, 3).length >= 1
+        ? (pulse.gainers ?? []).filter(g => g.change_pct > 0).slice(0, 3).map(g => ({ ticker: g.ticker, change_pct: g.change_pct }))
+        : getDemoMarketData().gainers,
+      losers: (pulse.losers ?? []).filter(l => l.change_pct < 0).slice(0, 3).length >= 1
+        ? (pulse.losers ?? []).filter(l => l.change_pct < 0).slice(0, 3).map(l => ({ ticker: l.ticker, change_pct: l.change_pct }))
+        : getDemoMarketData().losers,
+      fii_net: pulse.fii_net ?? getDemoMarketData().fii_net,
+      dii_net: pulse.dii_net ?? getDemoMarketData().dii_net,
+      date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+    }
+  } catch {
+    return getDemoMarketData()
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { type = 'market_wrap' } = await req.json()
 
-    const marketData = getDemoMarketData()
+    // Always try live data first — fall back to demo if unavailable
+    const marketData = await getLiveMarketData(req)
     const sectorData = getDemoSectorData()
     const ipoData = getDemoIPOData()
     const script = await generateScript(type, marketData)
