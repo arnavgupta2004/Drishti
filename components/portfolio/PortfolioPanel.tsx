@@ -156,20 +156,20 @@ export default function PortfolioPanel() {
         <div className="px-4 py-3 border-b border-border bg-bg-tertiary shrink-0">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <div className="text-[10px] text-text-secondary uppercase">Invested</div>
+              <div className="text-[16px] text-text-secondary uppercase">Invested</div>
               <div className="font-mono font-bold text-sm text-text-primary">
                 ₹{portfolio.total_invested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </div>
             </div>
             <div>
-              <div className="text-[10px] text-text-secondary uppercase">Current Value</div>
+              <div className="text-[16px] text-text-secondary uppercase">Current Value</div>
               <div className="font-mono font-bold text-sm text-text-primary">
                 ₹{portfolio.current_value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </div>
             </div>
           </div>
           <div className="mt-2 flex items-center gap-2">
-            <span className="text-[10px] text-text-secondary">Overall P&L:</span>
+            <span className="text-[16px] text-text-secondary">Overall P&L:</span>
             <span className={`font-mono font-bold text-lg ${totalPnl >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
               {totalPnl >= 0 ? '+' : ''}₹{Math.abs(totalPnl).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
             </span>
@@ -205,7 +205,7 @@ export default function PortfolioPanel() {
 
               {/* Add holding form */}
               <div className="border-t border-border pt-3 mt-2">
-                <div className="text-[10px] font-bold text-text-secondary uppercase mb-2">Add Holding</div>
+                <div className="text-[16px] font-bold text-text-secondary uppercase mb-2">Add Holding</div>
                 <div className="grid grid-cols-2 gap-2">
                   {/* Ticker field with validation */}
                   <div className="col-span-2 relative">
@@ -232,7 +232,7 @@ export default function PortfolioPanel() {
                   </div>
 
                   {tickerError && (
-                    <div className="col-span-2 flex items-center gap-1.5 text-[10px] text-[#FF4560]">
+                    <div className="col-span-2 flex items-center gap-1.5 text-[16px] text-[#FF4560]">
                       <AlertCircle size={10} />
                       {tickerError}
                     </div>

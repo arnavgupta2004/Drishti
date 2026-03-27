@@ -24,14 +24,14 @@ function MetricPill({ label, value, sub, positive }: { label: string; value: str
       className="flex flex-col gap-0.5 px-3 py-2.5 rounded-xl"
       style={{ background: '#0D1421', border: '1px solid #1C2840' }}
     >
-      <span className="text-[9px] text-[#4A5568] uppercase tracking-wider font-bold">{label}</span>
+      <span className="text-[15px] text-[#4A5568] uppercase tracking-wider font-bold">{label}</span>
       <span
         className="font-mono font-bold text-[15px]"
         style={{ color: positive === undefined ? '#E8EDF5' : positive ? '#00D4AA' : '#FF4560' }}
       >
         {value}
       </span>
-      {sub && <span className="text-[10px] text-[#4A5568]">{sub}</span>}
+      {sub && <span className="text-[16px] text-[#4A5568]">{sub}</span>}
     </div>
   )
 }
@@ -43,19 +43,19 @@ function QuarterBar({ q }: { q: QuarterlyResult }) {
       className="flex items-center justify-between px-3 py-2 rounded-lg"
       style={{ background: '#0D1421', border: '1px solid #1C2840' }}
     >
-      <span className="text-[11px] font-mono text-[#8B95A8] w-14 shrink-0">{q.quarter}</span>
+      <span className="text-[14px] font-mono text-[#8B95A8] w-14 shrink-0">{q.quarter}</span>
       <div className="flex-1 px-2">
-        <div className="text-[10px] text-[#4A5568]">Rev ₹{(q.revenue / 1000).toFixed(0)}Cr</div>
-        <div className="text-[10px] text-[#4A5568]">PAT ₹{(q.pat / 1000).toFixed(0)}Cr</div>
+        <div className="text-[16px] text-[#4A5568]">Rev ₹{(q.revenue / 1000).toFixed(0)}Cr</div>
+        <div className="text-[16px] text-[#4A5568]">PAT ₹{(q.pat / 1000).toFixed(0)}Cr</div>
       </div>
       <div className="text-right">
         <div
-          className="text-[11px] font-mono font-bold"
+          className="text-[14px] font-mono font-bold"
           style={{ color: isUp ? '#00D4AA' : '#FF4560' }}
         >
           {isUp ? '+' : ''}{q.pat_yoy.toFixed(1)}%
         </div>
-        <div className="text-[9px] text-[#4A5568]">PAT YoY</div>
+        <div className="text-[15px] text-[#4A5568]">PAT YoY</div>
       </div>
     </div>
   )
@@ -139,7 +139,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
             <div className="flex items-center gap-2.5">
               <div>
                 <div className="text-[#E8EDF5] font-bold text-[15px] leading-tight">{signal.company}</div>
-                <div className="text-[10px] font-mono text-[#4A5568] mt-0.5">{signal.ticker} · NSE</div>
+                <div className="text-[16px] font-mono text-[#4A5568] mt-0.5">{signal.ticker} · NSE</div>
               </div>
             </div>
             <button
@@ -160,7 +160,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                 ₹{price.price.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </span>
               <span
-                className="flex items-center gap-1 font-mono font-bold text-[13px]"
+                className="flex items-center gap-1 font-mono font-bold text-[16px]"
                 style={{ color: isUp ? '#00D4AA' : '#FF4560' }}
               >
                 {isUp ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -169,7 +169,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
             </div>
             {fund?.sector && (
               <span
-                className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mt-1.5"
+                className="inline-block text-[16px] font-semibold px-2 py-0.5 rounded-full mt-1.5"
                 style={{ background: 'rgba(59,139,235,0.1)', color: '#3B8BEB', border: '1px solid rgba(59,139,235,0.2)' }}
               >
                 {fund.sector}
@@ -182,26 +182,26 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
             {loading ? (
               <div className="flex flex-col items-center justify-center h-40 gap-3">
                 <Loader2 size={18} className="animate-spin" style={{ color: '#3B8BEB' }} />
-                <span className="text-[11px] text-[#4A5568]">Fetching live data...</span>
+                <span className="text-[14px] text-[#4A5568]">Fetching live data...</span>
               </div>
             ) : (
               <>
                 {/* Signal that triggered this */}
                 <div>
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Signal</div>
+                  <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Signal</div>
                   <div
                     className="px-3 py-2.5 rounded-xl"
                     style={{ background: '#0D1421', border: '1px solid #1C2840' }}
                   >
-                    <div className="text-[12px] font-semibold text-[#E8EDF5] mb-0.5">{signal.headline}</div>
-                    <div className="text-[11px] text-[#8B95A8] leading-relaxed">{signal.detail}</div>
+                    <div className="text-[15px] font-semibold text-[#E8EDF5] mb-0.5">{signal.headline}</div>
+                    <div className="text-[14px] text-[#8B95A8] leading-relaxed">{signal.detail}</div>
                   </div>
                 </div>
 
                 {/* Technicals */}
                 {tech && (
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Technicals</div>
+                    <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Technicals</div>
                     <div className="grid grid-cols-2 gap-2">
                       <MetricPill
                         label="RSI (14)"
@@ -231,7 +231,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                 {/* Fundamentals */}
                 {fund && (
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Fundamentals</div>
+                    <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Fundamentals</div>
                     <div className="grid grid-cols-2 gap-2">
                       {fund.pe > 0 && (
                         <MetricPill label="P/E Ratio" value={fund.pe.toFixed(1)} />
@@ -275,7 +275,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                 {/* Quarterly results */}
                 {quarterly.length > 0 && (
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">
+                    <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">
                       Quarterly Results
                     </div>
                     <div className="space-y-1.5">
@@ -296,7 +296,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
           >
             <button
               onClick={() => { onAnalyse(signal); onClose() }}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-[12px] transition-all duration-200"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-[15px] transition-all duration-200"
               style={{ background: 'rgba(0,212,170,0.1)', border: '1px solid rgba(0,212,170,0.3)', color: '#00D4AA' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0,212,170,0.18)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0,212,170,0.1)')}
@@ -305,7 +305,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
             </button>
             <button
               onClick={() => { setActiveStock(signal.ticker); onClose() }}
-              className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl font-semibold text-[12px] transition-all duration-200"
+              className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl font-semibold text-[15px] transition-all duration-200"
               style={{ background: '#141E30', border: '1px solid #1C2840', color: '#8B95A8' }}
               onMouseEnter={e => { (e.currentTarget.style.background = '#1C2840'); (e.currentTarget.style.color = '#E8EDF5') }}
               onMouseLeave={e => { (e.currentTarget.style.background = '#141E30'); (e.currentTarget.style.color = '#8B95A8') }}

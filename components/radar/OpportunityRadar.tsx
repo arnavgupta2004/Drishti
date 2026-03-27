@@ -26,12 +26,12 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
       >
         {/* Centered title + badge */}
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">
+          <span className="text-[14px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">
             Opportunity Radar
           </span>
           {signals.length > 0 && (
             <span
-              className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+              className="text-[15px] font-bold px-1.5 py-0.5 rounded-full"
               style={{ background: 'rgba(0,212,170,0.08)', color: '#00D4AA', border: '1px solid rgba(0,212,170,0.15)' }}
             >
               {signals.length} signals
@@ -44,7 +44,7 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
             className="w-1.5 h-1.5 rounded-full animate-pulse"
             style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
           />
-          <span className="text-[10px] text-[#4A5568]">{isDemoMode ? 'Demo' : 'Live'}</span>
+          <span className="text-[16px] text-[#4A5568]">{isDemoMode ? 'Demo' : 'Live'}</span>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
               className="flex flex-col items-center justify-center h-40 gap-3"
             >
               <RefreshCw size={16} className="animate-spin" style={{ color: '#4A5568' }} />
-              <span className="text-[11px] text-[#4A5568]">Scanning markets...</span>
+              <span className="text-[14px] text-[#4A5568]">Scanning markets...</span>
             </motion.div>
           ) : (
             signals.map((signal, i) => (
@@ -76,7 +76,7 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
 
       {/* Footer */}
       <div className="px-4 py-2 shrink-0" style={{ borderTop: '1px solid #1C2840' }}>
-        <p className="text-[9px] text-[#4A5568] text-center tracking-wide">
+        <p className="text-[15px] text-[#4A5568] text-center tracking-wide">
           Tap a signal to view company details · Auto-refresh 5 min
         </p>
       </div>

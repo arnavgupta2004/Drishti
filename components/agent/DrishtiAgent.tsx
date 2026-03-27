@@ -174,9 +174,9 @@ export default function DrishtiAgent() {
       >
         <div className="flex items-center gap-2">
           <Bot size={12} className="text-[#FFB800]" />
-          <span className="text-[11px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">Drishti Agent</span>
+          <span className="text-[14px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">Drishti Agent</span>
           <span
-            className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+            className="text-[15px] font-bold px-1.5 py-0.5 rounded-full"
             style={{ background: 'rgba(255,184,0,0.08)', color: '#FFB800', border: '1px solid rgba(255,184,0,0.15)' }}
           >
             4-AGENT AI
@@ -212,19 +212,19 @@ export default function DrishtiAgent() {
               <Sparkles size={16} className="text-[#FFB800]" />
             </div>
             <div>
-              <p className="text-[#E8EDF5] text-[13px] font-semibold mb-1">Namaskar! Main DRISHTI hoon 🇮🇳</p>
-              <p className="text-[#8B95A8] text-[11px] leading-relaxed">
+              <p className="text-[#E8EDF5] text-[16px] font-semibold mb-1">Namaskar! Main DRISHTI hoon 🇮🇳</p>
+              <p className="text-[#8B95A8] text-[14px] leading-relaxed">
                 Your personal hedge fund AI.<br />
                 Ask about any NSE/BSE stock.
               </p>
             </div>
             <div className="w-full space-y-1.5">
-              <p className="text-[9px] text-[#4A5568] uppercase tracking-wider mb-2">Quick queries</p>
+              <p className="text-[15px] text-[#4A5568] uppercase tracking-wider mb-2">Quick queries</p>
               {QUICK_QUERIES[language].map(q => (
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
-                  className="w-full text-left text-[12px] text-[#8B95A8] hover:text-[#E8EDF5] rounded-lg px-3 py-2 transition-all duration-200"
+                  className="w-full text-left text-[15px] text-[#8B95A8] hover:text-[#E8EDF5] rounded-lg px-3 py-2 transition-all duration-200"
                   style={{ background: '#0D1421', border: '1px solid #1C2840' }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.background = '#141E30'
@@ -252,7 +252,7 @@ export default function DrishtiAgent() {
       <div className="px-3 pt-2.5 pb-3 shrink-0" style={{ borderTop: '1px solid #1C2840' }}>
         {/* Language selector — full width, clearly visible */}
         <div className="flex items-center gap-1.5 mb-2.5">
-          <span className="text-[10px] text-[#4A5568] font-semibold tracking-wider uppercase shrink-0">
+          <span className="text-[16px] text-[#4A5568] font-semibold tracking-wider uppercase shrink-0">
             Lang:
           </span>
           <div className="flex items-center gap-1 flex-1">
@@ -260,7 +260,7 @@ export default function DrishtiAgent() {
               <button
                 key={l}
                 onClick={() => setLanguage(l)}
-                className="flex-1 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200"
+                className="flex-1 py-1 rounded-lg text-[14px] font-semibold transition-all duration-200"
                 style={{
                   background: language === l ? '#3B8BEB' : '#0D1421',
                   color:      language === l ? '#fff'    : '#8B95A8',
@@ -286,7 +286,7 @@ export default function DrishtiAgent() {
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
             placeholder={PLACEHOLDERS[language]}
             disabled={isAgentRunning}
-            className="flex-1 bg-transparent text-[13px] text-[#E8EDF5] placeholder-[#4A5568] outline-none disabled:opacity-40 min-w-0"
+            className="flex-1 bg-transparent text-[16px] text-[#E8EDF5] placeholder-[#4A5568] outline-none disabled:opacity-40 min-w-0"
           />
           <button
             onClick={() => sendMessage(input)}
@@ -297,7 +297,7 @@ export default function DrishtiAgent() {
             <ArrowUp size={13} className="text-white" />
           </button>
         </div>
-        <p className="text-[9px] text-[#4A5568] mt-1.5 text-center tracking-wide">
+        <p className="text-[15px] text-[#4A5568] mt-1.5 text-center tracking-wide">
           Detect · Enrich · Personalize · Recommend
         </p>
       </div>

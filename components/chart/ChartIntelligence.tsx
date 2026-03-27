@@ -114,7 +114,7 @@ export default function ChartIntelligence() {
                 <div className="skeleton h-6 w-32 mt-1" />
               ) : null}
             </div>
-            <span className="text-[11px] text-[#8B95A8]">NSE · Chart Intelligence</span>
+            <span className="text-[14px] text-[#8B95A8]">NSE · Chart Intelligence</span>
           </div>
 
           {/* Search + Detect */}
@@ -130,7 +130,7 @@ export default function ChartIntelligence() {
                   value={searchQuery}
                   onChange={e => handleSearch(e.target.value)}
                   placeholder="Search ticker..."
-                  className="bg-transparent text-[12px] text-[#E8EDF5] placeholder-[#8B95A8] outline-none w-28"
+                  className="bg-transparent text-[15px] text-[#E8EDF5] placeholder-[#8B95A8] outline-none w-28"
                 />
               </div>
               {searchResults.length > 0 && (
@@ -140,7 +140,7 @@ export default function ChartIntelligence() {
                 >
                   {searchResults.map(t => (
                     <button key={t} onClick={() => selectTicker(t)}
-                      className="block w-full text-left px-3 py-2 text-[12px] text-[#8B95A8] hover:text-[#3B8BEB] font-mono transition-colors duration-150"
+                      className="block w-full text-left px-3 py-2 text-[15px] text-[#8B95A8] hover:text-[#3B8BEB] font-mono transition-colors duration-150"
                       style={{ background: 'transparent' }}
                       onMouseEnter={e => (e.currentTarget.style.background = '#141E30')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
@@ -156,7 +156,7 @@ export default function ChartIntelligence() {
             <button
               onClick={handleDetectPatterns}
               disabled={patternLoading}
-              className="flex items-center gap-1.5 text-[12px] font-semibold px-4 py-1.5 rounded-full transition-all duration-200 disabled:opacity-50"
+              className="flex items-center gap-1.5 text-[15px] font-semibold px-4 py-1.5 rounded-full transition-all duration-200 disabled:opacity-50"
               style={{ background: 'rgba(0,212,170,0.1)', border: '1px solid rgba(0,212,170,0.3)', color: '#00D4AA' }}
             >
               {patternLoading ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
@@ -172,7 +172,7 @@ export default function ChartIntelligence() {
               <button
                 key={tf}
                 onClick={() => setTimeframe(tf)}
-                className="px-3 py-1 text-[12px] font-medium rounded-lg transition-all duration-200"
+                className="px-3 py-1 text-[15px] font-medium rounded-lg transition-all duration-200"
                 style={{
                   background:   timeframe === tf ? '#141E30' : 'transparent',
                   color:        timeframe === tf ? '#E8EDF5' : '#8B95A8',
@@ -191,7 +191,7 @@ export default function ChartIntelligence() {
                 <button
                   key={label}
                   onClick={() => overlaySetters[label](!active)}
-                  className="px-2.5 py-1 text-[10px] font-semibold rounded-lg transition-all duration-200"
+                  className="px-2.5 py-1 text-[16px] font-semibold rounded-lg transition-all duration-200"
                   style={{
                     background:   active ? `${color}18` : 'transparent',
                     color:        active ? color : '#8B95A8',
@@ -211,7 +211,7 @@ export default function ChartIntelligence() {
         {loading ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
             <Loader2 size={22} className="animate-spin text-[#3B8BEB] opacity-60" />
-            <span className="text-[11px] text-[#8B95A8]">Loading chart data...</span>
+            <span className="text-[14px] text-[#8B95A8]">Loading chart data...</span>
           </div>
         ) : (
           <CandlestickChart
@@ -234,14 +234,14 @@ export default function ChartIntelligence() {
           <div className="flex items-center gap-2 pt-3 pb-2">
             {fundamentals.sector && (
               <span
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide"
+                className="text-[16px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide"
                 style={{ background: 'rgba(59,139,235,0.12)', border: '1px solid rgba(59,139,235,0.25)', color: '#3B8BEB' }}
               >
                 {fundamentals.sector}
               </span>
             )}
             {fundamentals.market_cap > 0 && (
-              <span className="text-[10px] text-[#4A5568] font-medium">
+              <span className="text-[16px] text-[#4A5568] font-medium">
                 Market Cap: <span className="text-[#8B95A8] font-semibold">
                   ₹{fundamentals.market_cap >= 100000
                     ? `${(fundamentals.market_cap / 100000).toFixed(1)}L Cr`
@@ -262,9 +262,9 @@ export default function ChartIntelligence() {
               { label: 'D/E',       value: fundamentals.debt_equity > 0 ? fundamentals.debt_equity.toFixed(2) : '—', up: fundamentals.debt_equity < 0.5 },
             ].map(m => (
               <div key={m.label} className="rounded-lg p-2 text-center" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
-                <div className="text-[8px] text-[#4A5568] uppercase tracking-wider mb-1 font-semibold">{m.label}</div>
+                <div className="text-[14px] text-[#4A5568] uppercase tracking-wider mb-1 font-semibold">{m.label}</div>
                 <div
-                  className="font-mono font-bold text-[12px]"
+                  className="font-mono font-bold text-[15px]"
                   style={{ color: m.neutral ? '#E8EDF5' : m.up ? '#00D4AA' : m.value === '—' ? '#4A5568' : '#FF4560' }}
                 >
                   {m.value}
@@ -276,26 +276,26 @@ export default function ChartIntelligence() {
           {/* Quarterly results mini-table */}
           {quarterly.length > 0 && (
             <div className="mt-3">
-              <div className="text-[9px] font-bold text-[#4A5568] uppercase tracking-wider mb-2">Quarterly Results</div>
+              <div className="text-[15px] font-bold text-[#4A5568] uppercase tracking-wider mb-2">Quarterly Results</div>
               <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${Math.min(quarterly.length, 4)}, 1fr)` }}>
                 {quarterly.slice(0, 4).map(q => (
                   <div key={q.quarter} className="rounded-lg p-2" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
-                    <div className="text-[8px] font-bold text-[#4A5568] uppercase mb-1.5">{q.quarter}</div>
+                    <div className="text-[14px] font-bold text-[#4A5568] uppercase mb-1.5">{q.quarter}</div>
                     <div className="space-y-1">
                       <div className="flex justify-between items-center">
-                        <span className="text-[9px] text-[#4A5568]">Rev</span>
-                        <span className="text-[9px] font-mono font-semibold text-[#8B95A8]">
+                        <span className="text-[15px] text-[#4A5568]">Rev</span>
+                        <span className="text-[15px] font-mono font-semibold text-[#8B95A8]">
                           ₹{q.revenue >= 10000 ? `${(q.revenue / 1000).toFixed(0)}K` : q.revenue.toLocaleString('en-IN')} Cr
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-[9px] text-[#4A5568]">PAT</span>
-                        <span className="text-[9px] font-mono font-semibold" style={{ color: q.pat >= 0 ? '#00D4AA' : '#FF4560' }}>
+                        <span className="text-[15px] text-[#4A5568]">PAT</span>
+                        <span className="text-[15px] font-mono font-semibold" style={{ color: q.pat >= 0 ? '#00D4AA' : '#FF4560' }}>
                           ₹{Math.abs(q.pat) >= 10000 ? `${(Math.abs(q.pat) / 1000).toFixed(0)}K` : Math.abs(q.pat).toLocaleString('en-IN')} Cr
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-[9px] text-[#4A5568]">YoY</span>
+                        <span className="text-[15px] text-[#4A5568]">YoY</span>
                         <div className="flex items-center gap-0.5">
                           {q.pat_yoy > 0
                             ? <TrendingUp size={8} style={{ color: '#00D4AA' }} />
@@ -303,7 +303,7 @@ export default function ChartIntelligence() {
                             ? <TrendingDown size={8} style={{ color: '#FF4560' }} />
                             : <Minus size={8} style={{ color: '#4A5568' }} />}
                           <span
-                            className="text-[9px] font-mono font-bold"
+                            className="text-[15px] font-mono font-bold"
                             style={{ color: q.pat_yoy > 0 ? '#00D4AA' : q.pat_yoy < 0 ? '#FF4560' : '#4A5568' }}
                           >
                             {q.pat_yoy > 0 ? '+' : ''}{q.pat_yoy.toFixed(1)}%

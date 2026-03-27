@@ -60,17 +60,17 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       {/* Top row: company + price */}
       <div className="flex items-start justify-between mb-2.5">
         <div className="flex-1 min-w-0 mr-2">
-          <div className="text-[#E8EDF5] font-semibold text-[13px] leading-tight truncate">
+          <div className="text-[#E8EDF5] font-semibold text-[16px] leading-tight truncate">
             {signal.company}
           </div>
-          <div className="text-[#4A5568] text-[10px] font-mono mt-0.5">{signal.ticker}</div>
+          <div className="text-[#4A5568] text-[16px] font-mono mt-0.5">{signal.ticker}</div>
         </div>
         <div className="text-right flex-shrink-0">
-          <div className="font-mono font-semibold text-[13px] text-[#E8EDF5]">
+          <div className="font-mono font-semibold text-[16px] text-[#E8EDF5]">
             ₹{signal.price.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </div>
           <div
-            className={`text-[11px] font-mono font-semibold ${isUp ? 'glow-green' : 'glow-red'}`}
+            className={`text-[14px] font-mono font-semibold ${isUp ? 'glow-green' : 'glow-red'}`}
             style={{ color: isUp ? '#00D4AA' : '#FF4560' }}
           >
             {isUp ? '+' : ''}{signal.change_pct.toFixed(1)}%
@@ -81,16 +81,16 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       {/* Signal type pill */}
       <div className="mb-2.5">
         <span
-          className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+          className="inline-flex items-center gap-1 text-[16px] font-bold px-2 py-0.5 rounded-full"
           style={{ background: `${signalColor}12`, color: signalColor }}
         >
-          <span className="text-[10px]">{icon}</span>
+          <span className="text-[16px]">{icon}</span>
           {SIGNAL_LABELS[signal.signal_type]}
         </span>
       </div>
 
       {/* One-line detail */}
-      <p className="text-[#4A5568] text-[11px] leading-relaxed mb-3 line-clamp-1">{signal.detail}</p>
+      <p className="text-[#4A5568] text-[14px] leading-relaxed mb-3 line-clamp-1">{signal.detail}</p>
 
       {/* Bottom: hover buttons + score */}
       <div className="flex items-center justify-between">
@@ -98,7 +98,7 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={e => { e.stopPropagation(); onAnalyse(signal) }}
-            className="flex items-center gap-1 text-[11px] font-semibold py-1 px-2.5 rounded-lg transition-colors duration-150"
+            className="flex items-center gap-1 text-[14px] font-semibold py-1 px-2.5 rounded-lg transition-colors duration-150"
             style={{ background: 'rgba(59,139,235,0.12)', color: '#3B8BEB' }}
             onMouseEnter={e => (e.currentTarget.style.background = 'rgba(59,139,235,0.22)')}
             onMouseLeave={e => (e.currentTarget.style.background = 'rgba(59,139,235,0.12)')}
@@ -107,7 +107,7 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
           </button>
           <button
             onClick={e => { e.stopPropagation(); setActiveStock(signal.ticker) }}
-            className="flex items-center gap-1 text-[11px] py-1 px-2.5 rounded-lg transition-colors duration-150"
+            className="flex items-center gap-1 text-[14px] py-1 px-2.5 rounded-lg transition-colors duration-150"
             style={{ background: '#141E30', color: '#8B95A8' }}
             onMouseEnter={e => (e.currentTarget.style.background = '#1C2840')}
             onMouseLeave={e => (e.currentTarget.style.background = '#141E30')}

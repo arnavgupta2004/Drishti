@@ -17,18 +17,18 @@ export default function HoldingRow({ holding, onRemove }: Props) {
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <span className="font-mono text-xs font-bold text-text-primary">{holding.ticker}</span>
-          <span className="text-[10px] text-text-secondary">{holding.qty} shares</span>
+          <span className="text-[16px] text-text-secondary">{holding.qty} shares</span>
         </div>
         <div className="flex items-center gap-3 mt-0.5">
-          <span className="text-[10px] text-text-secondary font-mono">
+          <span className="text-[16px] text-text-secondary font-mono">
             Avg: ₹{holding.avg_buy_price.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </span>
           {holding.current_price && (
-            <span className="text-[10px] font-mono text-text-primary">
+            <span className="text-[16px] font-mono text-text-primary">
               LTP: ₹{holding.current_price.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
             </span>
           )}
-          <span className={`text-[10px] font-mono font-bold ${isUp ? 'text-accent-green' : 'text-accent-red'}`}>
+          <span className={`text-[16px] font-mono font-bold ${isUp ? 'text-accent-green' : 'text-accent-red'}`}>
             {isUp ? '+' : ''}₹{Math.abs(pnl).toLocaleString('en-IN', { maximumFractionDigits: 0 })} ({isUp ? '+' : ''}{pnl_pct.toFixed(1)}%)
           </span>
         </div>

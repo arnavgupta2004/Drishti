@@ -71,14 +71,14 @@ function buildTickerItems(pulse: MarketPulseData) {
 function TickerItem({ label, value, change, up }: { label: string; value: string; change: string; up: boolean }) {
   return (
     <div className="flex items-center gap-2.5 shrink-0" style={{ padding: '0 20px' }}>
-      <span className="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap" style={{ color: '#4A5568' }}>
+      <span className="text-[11px] font-bold tracking-widest uppercase whitespace-nowrap" style={{ color: '#4A5568' }}>
         {label}
       </span>
-      <span className="font-mono text-[12px] font-semibold whitespace-nowrap" style={{ color: '#E8EDF5' }}>
+      <span className="font-mono text-[13px] font-semibold whitespace-nowrap" style={{ color: '#E8EDF5' }}>
         {value}
       </span>
       <span
-        className={`text-[11px] font-mono font-bold whitespace-nowrap ${up ? 'glow-green' : 'glow-red'}`}
+        className={`text-[12px] font-mono font-bold whitespace-nowrap ${up ? 'glow-green' : 'glow-red'}`}
         style={{ color: up ? '#00D4AA' : '#FF4560' }}
       >
         {change}
@@ -205,7 +205,7 @@ export default function MarketPulse() {
             style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
           />
           <span
-            className="text-[10px] font-bold tracking-wider"
+            className="text-[11px] font-bold tracking-wider"
             style={{ color: isDemoMode ? '#FFB800' : '#00D4AA' }}
           >
             {isDemoMode ? 'DEMO' : 'LIVE'}
@@ -215,7 +215,7 @@ export default function MarketPulse() {
         {/* Demo / Live toggle */}
         <button
           onClick={() => setDemoMode(!isDemoMode)}
-          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
           style={{
             background: isDemoMode ? 'rgba(255,184,0,0.08)' : 'rgba(0,212,170,0.08)',
             border: `1px solid ${isDemoMode ? 'rgba(255,184,0,0.25)' : 'rgba(0,212,170,0.25)'}`,
@@ -230,7 +230,7 @@ export default function MarketPulse() {
         {/* Video Engine button */}
         <button
           onClick={() => setVideoEngineOpen(!videoEngineOpen)}
-          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
           style={{
             background: videoEngineOpen ? 'rgba(59,139,235,0.15)' : 'rgba(59,139,235,0.07)',
             border: '1px solid rgba(59,139,235,0.25)',
@@ -245,7 +245,7 @@ export default function MarketPulse() {
         {/* Portfolio button */}
         <button
           onClick={() => setPortfolioOpen(!portfolioOpen)}
-          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
           style={{
             background: portfolioOpen ? 'rgba(255,184,0,0.15)' : 'rgba(255,184,0,0.07)',
             border: '1px solid rgba(255,184,0,0.25)',
