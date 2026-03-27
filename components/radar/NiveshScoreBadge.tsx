@@ -5,7 +5,8 @@ interface Props {
   size?: 'sm' | 'md' | 'lg'
 }
 
-export default function NiveshScoreBadge({ score, size = 'md' }: Props) {
+export default function NiveshScoreBadge({ score: rawScore, size = 'md' }: Props) {
+  const score = Math.round(rawScore)
   const color =
     score >= 80 ? '#00D4AA' :
     score >= 65 ? '#3B8BEB' :

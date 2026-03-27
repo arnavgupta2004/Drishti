@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
           detail,
           price: priceData.price,
           change_pct: priceData.change_pct,
-          nivesh_score: deal.dealType === 'BUY' ? 65 + Math.random() * 20 : 30 + Math.random() * 20,
+          nivesh_score: Math.round(deal.dealType === 'BUY' ? 65 + Math.random() * 20 : 30 + Math.random() * 20),
           timestamp: Date.now(),
           is_new: true,
         })
