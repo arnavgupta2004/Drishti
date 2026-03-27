@@ -119,19 +119,19 @@ export default function MarketPulse() {
     >
       {/* ── LEFT: Brand ─────────────────────────────────────── */}
       <div
-        className="flex flex-col justify-center px-5 h-full shrink-0 gap-1"
-        style={{ borderRight: '1px solid #1C2840', minWidth: 220 }}
+        className="flex flex-col items-center justify-center px-5 h-full shrink-0"
+        style={{ borderRight: '1px solid #1C2840', minWidth: 220, gap: 3 }}
       >
         <div className="flex items-center gap-2">
           <span
             className="font-bold tracking-tight leading-none"
-            style={{ color: '#E8EDF5', fontSize: 22 }}
+            style={{ color: '#E8EDF5', fontSize: 25 }}
           >
             दृष्टि
           </span>
           <span
             className="font-black tracking-[0.18em] leading-none"
-            style={{ color: '#3B8BEB', fontSize: 13 }}
+            style={{ color: '#3B8BEB', fontSize: 15 }}
           >
             DRISHTI
           </span>

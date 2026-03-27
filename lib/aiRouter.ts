@@ -54,11 +54,74 @@ async function groqChat(systemPrompt: string, userMessage: string, maxTokens = 2
 // ─── Task 1: Intent Extraction ────────────────────────────────────────────────
 // Used in /api/agent/route.ts before calling Claude
 
+// Common company name → NSE ticker mapping (handles "Analyze Zomato", "Reliance ka scene", etc.)
+const NAME_TO_TICKER: Record<string, string> = {
+  'zomato': 'ZOMATO', 'reliance': 'RELIANCE', 'jio': 'RELIANCE',
+  'hdfc': 'HDFCBANK', 'hdfcbank': 'HDFCBANK', 'hdfc bank': 'HDFCBANK',
+  'tcs': 'TCS', 'tata consultancy': 'TCS',
+  'infosys': 'INFY', 'infy': 'INFY',
+  'wipro': 'WIPRO', 'titan': 'TITAN', 'tanishq': 'TITAN',
+  'bajaj': 'BAJFINANCE', 'bajajfinance': 'BAJFINANCE', 'bajaj finance': 'BAJFINANCE',
+  'bajajfinsv': 'BAJAJFINSV', 'bajaj finserv': 'BAJAJFINSV',
+  'itc': 'ITC', 'kotak': 'KOTAKBANK', 'kotak bank': 'KOTAKBANK', 'kotakbank': 'KOTAKBANK',
+  'sbi': 'SBIN', 'state bank': 'SBIN',
+  'icici': 'ICICIBANK', 'icici bank': 'ICICIBANK', 'icicibank': 'ICICIBANK',
+  'axis': 'AXISBANK', 'axis bank': 'AXISBANK', 'axisbank': 'AXISBANK',
+  'ongc': 'ONGC', 'maruti': 'MARUTI', 'maruti suzuki': 'MARUTI',
+  'sunpharma': 'SUNPHARMA', 'sun pharma': 'SUNPHARMA', 'sun pharmaceutical': 'SUNPHARMA',
+  'adani': 'ADANIPORTS', 'adani ports': 'ADANIPORTS', 'adaniports': 'ADANIPORTS',
+  'ntpc': 'NTPC', 'powergrid': 'POWERGRID', 'power grid': 'POWERGRID',
+  'hcl': 'HCLTECH', 'hcltech': 'HCLTECH', 'hcl tech': 'HCLTECH',
+  'techm': 'TECHM', 'tech mahindra': 'TECHM',
+  'lt': 'LT', 'larsen': 'LT', 'larsen toubro': 'LT',
+  'ltimindtree': 'LTIMINDTREE', 'lti': 'LTIMINDTREE',
+  'drreddy': 'DRREDDY', 'dr reddy': 'DRREDDY', 'dr reddys': 'DRREDDY',
+  'cipla': 'CIPLA', 'eicher': 'EICHERMOT', 'royal enfield': 'EICHERMOT',
+  'bpcl': 'BPCL', 'hindalco': 'HINDALCO',
+  'tatamotors': 'TATAMOTORS', 'tata motors': 'TATAMOTORS',
+  'tatasteel': 'TATASTEEL', 'tata steel': 'TATASTEEL',
+  'tatapower': 'TATAPOWER', 'tata power': 'TATAPOWER',
+  'nestleind': 'NESTLEIND', 'nestle': 'NESTLEIND',
+  'asianpaint': 'ASIANPAINT', 'asian paints': 'ASIANPAINT', 'asian paint': 'ASIANPAINT',
+  'ultracemco': 'ULTRACEMCO', 'ultratech': 'ULTRACEMCO', 'ultratech cement': 'ULTRACEMCO',
+  'bharti': 'BHARTIARTL', 'airtel': 'BHARTIARTL', 'bhartiartl': 'BHARTIARTL',
+  'nykaa': 'NYKAA', 'paytm': 'PAYTM', 'one97': 'PAYTM',
+  'indigo': 'INDIGO', 'interglobe': 'INDIGO',
+  'dmart': 'DMART', 'avenue supermarts': 'DMART',
+  'pidilite': 'PIDILITIND', 'fevicol': 'PIDILITIND',
+  'havells': 'HAVELLS', 'voltas': 'VOLTAS',
+  'britannia': 'BRITANNIA', 'marico': 'MARICO', 'dabur': 'DABUR',
+  'godrej': 'GODREJCP', 'godrej consumer': 'GODREJCP',
+  'mrf': 'MRF', 'apollo tyre': 'APOLLOTYRE', 'apollo tyres': 'APOLLOTYRE',
+  'indusind': 'INDUSINDBK', 'indusind bank': 'INDUSINDBK',
+  'federalbank': 'FEDERALBNK', 'federal bank': 'FEDERALBNK',
+  'srf': 'SRF', 'coforge': 'COFORGE', 'persistent': 'PERSISTENT',
+  'mphasis': 'MPHASIS', 'hexaware': 'HEXAWARE',
+}
+
+function extractTickerFromText(text: string): string | null {
+  const lower = text.toLowerCase()
+  // Check multi-word names first (longer matches win)
+  const sortedNames = Object.keys(NAME_TO_TICKER).sort((a, b) => b.length - a.length)
+  for (const name of sortedNames) {
+    if (lower.includes(name)) return NAME_TO_TICKER[name]
+  }
+  // Check if an all-caps word is already an NSE ticker
+  const capsMatch = text.match(/\b([A-Z]{2,12})\b/)
+  if (capsMatch) return capsMatch[1]
+  return null
+}
+
 export async function extractQueryIntent(rawQuery: string): Promise<QueryIntent> {
+  const isHinglish = /[^\x00-\x7F]/.test(rawQuery) || /\b(kya|hai|mein|ka|ko|se|aur|hoga|karein|lagao|becho)\b/i.test(rawQuery)
+
+  // Fast local extraction first — catches "Analyze Zomato", "RELIANCE ka scene" etc.
+  const localTicker = extractTickerFromText(rawQuery)
+
   const fallback: QueryIntent = {
-    ticker: null,
+    ticker: localTicker,
     intent: rawQuery,
-    isHinglish: /[^\x00-\x7F]/.test(rawQuery) || /\b(kya|hai|mein|ka|ko|se|aur|hoga|karein|lagao|becho)\b/i.test(rawQuery),
+    isHinglish,
     routed_to: 'groq',
   }
 
@@ -68,7 +131,7 @@ export async function extractQueryIntent(rawQuery: string): Promise<QueryIntent>
 Extract structured intent from user queries. Respond ONLY with a JSON object.
 
 Rules:
-- ticker: NSE symbol if mentioned (RELIANCE, HDFCBANK, TCS, INFY etc.), else null
+- ticker: NSE symbol if mentioned (RELIANCE, HDFCBANK, TCS, INFY, ZOMATO, TITAN, ICICIBANK, SBIN, WIPRO, BAJFINANCE, MARUTI, SUNPHARMA, ADANIPORTS, NTPC, AIRTEL, HCLTECH, TECHM, LT, DRREDDY, CIPLA, ITC, KOTAKBANK, AXISBANK, ONGC etc.), else null
 - intent: clean English reformulation (remove filler, keep financial meaning)
 - isHinglish: true if query contains Hindi/Hinglish words`,
       `Query: "${rawQuery}"
@@ -81,9 +144,10 @@ Respond with ONLY this JSON (no markdown):
     if (!match) return fallback
     const parsed = JSON.parse(match[0]) as { ticker?: string | null; intent?: string; isHinglish?: boolean }
     return {
-      ticker: parsed.ticker ?? null,
+      // Prefer Groq's extraction, fall back to local extraction if Groq returned null
+      ticker: parsed.ticker ?? localTicker,
       intent: parsed.intent ?? rawQuery,
-      isHinglish: parsed.isHinglish ?? fallback.isHinglish,
+      isHinglish: parsed.isHinglish ?? isHinglish,
       routed_to: 'groq',
     }
   } catch {

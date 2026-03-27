@@ -20,7 +20,7 @@ export default function ThreePanelLayout({ left, center, right }: Props) {
 
       {/* Center: Chart Intelligence — hero */}
       <div
-        className="flex-1 min-w-0 flex flex-col overflow-hidden"
+        className="flex-1 min-w-0 flex flex-col overflow-y-auto"
         style={{ borderRight: '1px solid #1C2840' }}
       >
         {center}

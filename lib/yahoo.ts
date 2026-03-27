@@ -79,9 +79,12 @@ export async function getStockPrice(ticker: string): Promise<StockPrice> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const yf = await import('yahoo-finance2') as any
     const q = await yf.default.quote(sym)
+    const livePrice = q.regularMarketPrice
+    // If Yahoo returns 0 or null/undefined — use seeded fallback so UI never shows ₹0
+    if (!livePrice || livePrice <= 0) return getFallbackPrice(ticker)
     return {
       ticker: sym,
-      price: q.regularMarketPrice ?? 0,
+      price: livePrice,
       change: q.regularMarketChange ?? 0,
       change_pct: q.regularMarketChangePercent ?? 0,
       volume: q.regularMarketVolume ?? 0,

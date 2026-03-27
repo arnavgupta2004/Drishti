@@ -122,13 +122,48 @@ function getGroqStepDetail(stepIndex: number, ticker: string, portfolio: Holding
   }
 }
 
+// Broad company name → NSE ticker map (mirrors aiRouter but kept local to avoid circular import)
+const COMPANY_NAME_MAP: Record<string, string> = {
+  'zomato': 'ZOMATO', 'reliance': 'RELIANCE', 'hdfc': 'HDFCBANK', 'tcs': 'TCS',
+  'infosys': 'INFY', 'infy': 'INFY', 'wipro': 'WIPRO', 'titan': 'TITAN',
+  'bajaj': 'BAJFINANCE', 'bajaj finance': 'BAJFINANCE', 'itc': 'ITC',
+  'kotak': 'KOTAKBANK', 'sbi': 'SBIN', 'icici': 'ICICIBANK', 'axis': 'AXISBANK',
+  'ongc': 'ONGC', 'maruti': 'MARUTI', 'sunpharma': 'SUNPHARMA', 'sun pharma': 'SUNPHARMA',
+  'adani': 'ADANIPORTS', 'ntpc': 'NTPC', 'hcl': 'HCLTECH', 'techm': 'TECHM',
+  'tech mahindra': 'TECHM', 'lt': 'LT', 'larsen': 'LT', 'drreddy': 'DRREDDY',
+  'dr reddy': 'DRREDDY', 'cipla': 'CIPLA', 'eicher': 'EICHERMOT', 'bpcl': 'BPCL',
+  'hindalco': 'HINDALCO', 'tatamotors': 'TATAMOTORS', 'tata motors': 'TATAMOTORS',
+  'tatasteel': 'TATASTEEL', 'nestle': 'NESTLEIND', 'nestleind': 'NESTLEIND',
+  'asianpaint': 'ASIANPAINT', 'asian paints': 'ASIANPAINT',
+  'ultratech': 'ULTRACEMCO', 'airtel': 'BHARTIARTL', 'bharti': 'BHARTIARTL',
+  'nykaa': 'NYKAA', 'paytm': 'PAYTM', 'indigo': 'INDIGO', 'dmart': 'DMART',
+  'pidilite': 'PIDILITIND', 'havells': 'HAVELLS', 'britannia': 'BRITANNIA',
+  'marico': 'MARICO', 'dabur': 'DABUR', 'mrf': 'MRF', 'indusind': 'INDUSINDBK',
+  'coforge': 'COFORGE', 'persistent': 'PERSISTENT', 'mphasis': 'MPHASIS',
+  'powergrid': 'POWERGRID', 'power grid': 'POWERGRID',
+}
+
+function extractTickerFromQuery(query: string): string {
+  // Priority 1: Explicit extraction tag
+  const tagged = query.match(/\[EXTRACTED TICKER:\s*([A-Z]+)\]/)
+  if (tagged) return tagged[1]
+  // Priority 2: All-caps NSE ticker in query
+  const caps = query.match(/\b([A-Z]{2,12})\b/)
+  if (caps) return caps[1]
+  // Priority 3: Company name mapping (case-insensitive)
+  const lower = query.toLowerCase()
+  const names = Object.keys(COMPANY_NAME_MAP).sort((a, b) => b.length - a.length)
+  for (const name of names) {
+    if (lower.includes(name)) return COMPANY_NAME_MAP[name]
+  }
+  return 'NSE'
+}
+
 async function* runGroqFallback(query: string, portfolio: Holding[], language: Language = 'hinglish'): AsyncGenerator<string> {
   const groqKey = process.env.GROQ_API_KEY
   const stepLabels = ['Signal Detection', 'Technical Enrichment', 'Fundamental Check', 'Portfolio Personalization']
 
-  // Extract ticker for step details
-  const tickerMatch = query.match(/\[EXTRACTED TICKER:\s*([A-Z]+)\]/) ?? query.match(/\b([A-Z]{2,12})\b/)
-  const ticker = tickerMatch?.[1] ?? 'NSE'
+  const ticker = extractTickerFromQuery(query)
 
   // Emit routing event — Groq is doing the analysis
   yield `data: ${JSON.stringify({
@@ -183,8 +218,12 @@ async function* runGroqFallback(query: string, portfolio: Holding[], language: L
 
 async function* runDemoFallback(query: string, portfolio: Holding[], language: Language = 'hinglish'): AsyncGenerator<string> {
   const rawQ = query.toLowerCase()
-  const nseMatch = rawQ.match(/\b(titan|reliance|hdfc|tcs|infy|infosys|wipro|bajaj|itc|kotak|nifty|sensex|adani|sbi|ongc|maruti|sunpharma)\b/)
-  const ticker = nseMatch?.[1]?.toUpperCase() ?? null
+
+  // Extract ticker using the same broad logic as Groq fallback
+  const extractedTicker = extractTickerFromQuery(query)
+  // extractTickerFromQuery returns 'NSE' as fallback — treat that as no ticker
+  const ticker = extractedTicker !== 'NSE' ? extractedTicker : null
+
   const foreignMatch = rawQ.match(/\b(nike|apple|google|amazon|tesla|microsoft|meta|netflix|nvidia|samsung|sony)\b/)
   const foreignName = foreignMatch?.[1]
 

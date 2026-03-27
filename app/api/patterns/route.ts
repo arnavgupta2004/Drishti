@@ -15,7 +15,9 @@ Format: date,open,high,low,close,volume
 Data (last 90 candles):
 ${csv}
 
-Return ONLY a valid JSON object — no markdown, no explanation, no code fences:
+CRITICAL: Respond ONLY with a valid JSON object. No markdown, no code fences, no explanation outside the JSON.
+LANGUAGE RULE: ALL text fields (description, description_hi) MUST be written in English only. No Hindi, no Hinglish, no transliteration. Pure English.
+
 {
   "pattern_name": "<pattern name>",
   "confidence": <0-100>,
@@ -23,8 +25,8 @@ Return ONLY a valid JSON object — no markdown, no explanation, no code fences:
   "resistance_level": <price as number>,
   "target_price": <price as number>,
   "stop_loss": <price as number>,
-  "description": "<1-2 sentence English description mentioning the stock and key price levels>",
-  "description_hi": "<1-2 sentence Hinglish description for retail investors>",
+  "description": "<1-2 sentence ENGLISH description mentioning ${ticker} and key price levels — NO Hindi or Hinglish>",
+  "description_hi": "<1-2 sentence ENGLISH description for retail investors — NO Hindi or Hinglish>",
   "historical_win_rate": <percentage 0-100>,
   "key_levels": [<support>, <resistance>, <target>],
   "direction": "<bullish|bearish|neutral>"
@@ -74,7 +76,7 @@ export async function POST(req: NextRequest) {
             messages: [
               {
                 role: 'system',
-                content: 'You are a technical analysis expert for Indian stocks. Always respond with valid JSON only — no markdown, no code blocks, no explanation.',
+                content: 'You are a technical analysis expert for Indian stocks. Always respond with valid JSON only — no markdown, no code blocks, no explanation. IMPORTANT: All text fields in your JSON response must be in English only. Do not use Hindi, Hinglish, or any transliteration.',
               },
               { role: 'user', content: PATTERN_PROMPT(ticker, csvData) },
             ],

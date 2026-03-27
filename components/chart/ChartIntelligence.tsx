@@ -93,7 +93,7 @@ export default function ChartIntelligence() {
   const selectTicker = (t: string) => { setActiveStock(t); setSearchQuery(''); setSearchResults([]) }
 
   return (
-    <div className="flex flex-col h-full bg-[#070B14]">
+    <div className="flex flex-col min-h-full bg-[#070B14]">
       {/* Hero header */}
       <div className="px-6 pt-4 pb-3 border-b border-[#1C2840] shrink-0">
         <div className="flex items-start justify-between">
@@ -207,7 +207,7 @@ export default function ChartIntelligence() {
       </div>
 
       {/* Chart */}
-      <div className="flex-1 min-h-0 relative">
+      <div className="shrink-0 relative" style={{ height: 420 }}>
         {loading ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
             <Loader2 size={22} className="animate-spin text-[#3B8BEB] opacity-60" />
