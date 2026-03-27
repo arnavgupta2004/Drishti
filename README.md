@@ -14,6 +14,7 @@ DRISHTI is an AI-powered stock market analysis platform for NSE/BSE listed stock
 - **DRISHTI Agent** — Conversational AI for stock analysis using a 4-step pipeline: Signal Detection → Technical Enrichment → Fundamental Check → Portfolio Personalization
 - **Portfolio Tracker** — Add holdings, track P&L live, and get AI-generated health scores with sector analysis
 - **Stock Info Drawer** — Click any signal to see full company details: technicals, fundamentals, quarterly results
+- **AI Video Engine** — Autonomous pipeline that generates animated market update videos (WebM) from live data — zero human editing. 4 templates: Daily Market Wrap, Sector Race Chart, FII/DII Flow, IPO Tracker. Auto Mode regenerates every 60 seconds.
 
 ---
 
@@ -28,6 +29,7 @@ DRISHTI uses a cost-efficient multi-model routing strategy:
 | Chart pattern detection | Claude Sonnet | Groq llama-3.3-70b → seeded demo |
 | Portfolio health score | Claude Sonnet | Groq → rule-based calculator |
 | Signal sentiment | Groq llama-3.1-8b | Rule-based |
+| Video voiceover script | Groq llama-3.3-70b | Seeded Hinglish templates |
 
 ---
 
@@ -102,14 +104,17 @@ drishti/
 │   │   ├── patterns/       # Chart pattern detection
 │   │   ├── portfolio/score/# Portfolio health scoring
 │   │   ├── signals/        # NSE bulk deal signals
-│   │   └── stock/[ticker]/ # Stock price, OHLCV, technicals, fundamentals
+│   │   ├── stock/[ticker]/ # Stock price, OHLCV, technicals, fundamentals
+│   │   └── video/generate/ # AI video script generation (Groq + demo fallback)
 │   ├── globals.css
 │   └── page.tsx
 ├── components/
 │   ├── chart/              # ChartIntelligence, CandlestickChart, PatternInfoCard
 │   ├── layout/             # MarketPulse (topbar), ThreePanelLayout
 │   ├── portfolio/          # PortfolioPanel, HealthScore
-│   └── radar/              # OpportunityRadar, SignalCard, StockInfoDrawer
+│   ├── radar/              # OpportunityRadar, SignalCard, StockInfoDrawer
+│   └── video/              # VideoEngine, MarketWrapAnimation, RaceChartAnimation,
+│                           #   FIIDIIFlow, IPOTracker (Canvas 2D + WebM export)
 ├── lib/
 │   ├── aiRouter.ts         # Groq intent extraction & signal sentiment
 │   ├── claude.ts           # Claude + Groq agent loop with SSE streaming
@@ -128,6 +133,33 @@ drishti/
 └── types/
     └── index.ts            # TypeScript type definitions
 ```
+
+---
+
+## AI Video Engine
+
+Click **🎬 Video** in the top bar to open the Video Engine — a fully autonomous pipeline that goes from raw market data to a downloadable animated video with zero human editing.
+
+### Templates
+
+| Template | Duration | Description |
+|---|---|---|
+| 📊 Daily Market Wrap | 45s | 5-scene animation: DRISHTI intro → index cards with count-up numbers → gainers/losers bar race → FII/DII arc circles → outro |
+| 🏁 Sector Race Chart | 30s | 8 sectors (IT, Banking, Pharma, Auto, FMCG, Realty, Metal, Energy) racing over 5 trading days, leader highlighted in gold |
+| 🏦 FII/DII Flow | 30s | Particle streams between FII/DII circles and NSE center — green = buying, red = selling |
+| 🚀 IPO Tracker | 45s | IPO cards animating in with subscription fill bars, GMP, sector tags, and status badges |
+
+### How it works
+
+1. Click **Generate** on any template
+2. `/api/video/generate` fetches live market data and calls **Groq llama-3.3-70b** to write a Hinglish voiceover script
+3. The animation renders on **HTML5 Canvas 2D** using `requestAnimationFrame` (no video libraries)
+4. Click **Record WebM** → `MediaRecorder` captures the canvas at 30fps → **Download WebM** button appears
+5. The AI-generated voiceover script is displayed below the animation
+
+### Auto Mode
+
+Toggle **🔴 Auto Mode** to enable fully autonomous operation: every 60 seconds, DRISHTI automatically fetches fresh market data, regenerates the AI script, and re-renders the Market Wrap animation. A live indicator shows when the last update occurred.
 
 ---
 
