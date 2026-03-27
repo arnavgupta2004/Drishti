@@ -92,10 +92,8 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       {/* One-line detail */}
       <p className="text-[#4A5568] text-[11px] leading-relaxed mb-3 line-clamp-1">{signal.detail}</p>
 
-      {/* Bottom: score + hover buttons */}
+      {/* Bottom: hover buttons + score */}
       <div className="flex items-center justify-between">
-        <NiveshScoreBadge score={signal.nivesh_score} size="sm" />
-
         {/* Hover-reveal action buttons */}
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
@@ -117,6 +115,7 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
             <BarChart2 size={10} /> Chart
           </button>
         </div>
+        <NiveshScoreBadge score={signal.nivesh_score} size="sm" />
       </div>
     </motion.div>
   )
