@@ -26,12 +26,12 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
       >
         {/* Centered title + badge */}
         <div className="flex items-center gap-2">
-          <span className="text-[14px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">
+          <span className="text-[13px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">
             Opportunity Radar
           </span>
           {signals.length > 0 && (
             <span
-              className="text-[15px] font-bold px-1.5 py-0.5 rounded-full"
+              className="text-[11px] font-bold px-2 py-0.5 rounded-full"
               style={{ background: 'rgba(0,212,170,0.08)', color: '#00D4AA', border: '1px solid rgba(0,212,170,0.15)' }}
             >
               {signals.length} signals
