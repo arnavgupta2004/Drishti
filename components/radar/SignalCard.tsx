@@ -32,11 +32,11 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       initial={{ x: -12, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: index * 0.05, duration: 0.28, ease: 'easeOut' }}
-      className="group relative rounded-xl p-3 cursor-pointer transition-all duration-300 ease-out"
+      className="group relative rounded-xl px-3.5 py-3.5 cursor-pointer transition-all duration-300 ease-out"
       style={{
         background: '#0D1421',
         border: signal.is_new ? `1px solid ${signalColor}40` : '1px solid #1C2840',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
+        boxShadow: '0 2px 16px rgba(0,0,0,0.35)',
       }}
       onClick={() => onCardClick?.(signal)}
       onMouseEnter={e => {
@@ -57,7 +57,7 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       )}
 
       {/* Top row: company + price */}
-      <div className="flex items-start justify-between mb-2">
+      <div className="flex items-start justify-between mb-2.5">
         <div className="flex-1 min-w-0 mr-2">
           <div className="text-[#E8EDF5] font-semibold text-[13px] leading-tight truncate">
             {signal.company}
@@ -78,7 +78,7 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       </div>
 
       {/* Signal type pill */}
-      <div className="mb-2">
+      <div className="mb-2.5">
         <span
           className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
           style={{ background: `${signalColor}12`, color: signalColor }}
@@ -89,7 +89,7 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       </div>
 
       {/* One-line detail */}
-      <p className="text-[#4A5568] text-[11px] leading-relaxed mb-2.5 line-clamp-1">{signal.detail}</p>
+      <p className="text-[#4A5568] text-[11px] leading-relaxed mb-3 line-clamp-1">{signal.detail}</p>
 
       {/* Bottom: score + hover buttons */}
       <div className="flex items-center justify-between">

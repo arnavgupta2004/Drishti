@@ -47,7 +47,7 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
       </div>
 
       {/* Signal feed */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 scrollbar-thin">
         <AnimatePresence>
           {signals.length === 0 ? (
             <motion.div
