@@ -12,19 +12,19 @@ export default function ThreePanelLayout({ left, center, right }: Props) {
   const [chatOpen, setChatOpen] = useState(true)
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-full overflow-hidden" style={{ background: '#040710' }}>
       {/* Left: Opportunity Radar */}
-      <div
-        className="w-[310px] shrink-0 flex flex-col overflow-hidden"
-        style={{ borderRight: '1px solid #1C2840' }}
-      >
+      <div className="w-[310px] shrink-0 flex flex-col overflow-hidden">
         {left}
       </div>
+
+      {/* Divider — left ↔ center */}
+      <div className="shrink-0 w-[3px] self-stretch" style={{ background: '#0A0F1C' }} />
 
       {/* Center: Chart Intelligence — hero */}
       <div
         className="flex-1 min-w-0 flex flex-col overflow-y-auto relative"
-        style={{ borderRight: chatOpen ? '1px solid #1C2840' : 'none' }}
+        style={{ borderRight: chatOpen ? '2px solid #0A0F1C' : 'none' }}
       >
         {center}
 

@@ -9,7 +9,7 @@ export const maxDuration = 60
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { query, portfolio = [], isDemoMode = false, language = 'hinglish' } = body as {
+    const { query, portfolio = [], isDemoMode = false, language = 'en' } = body as {
       query: string
       portfolio: Holding[]
       isDemoMode: boolean

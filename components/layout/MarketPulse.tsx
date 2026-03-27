@@ -120,25 +120,25 @@ export default function MarketPulse() {
       {/* ── LEFT: Brand ─────────────────────────────────────── */}
       <div
         className="flex flex-col items-center justify-center px-5 h-full shrink-0"
-        style={{ borderRight: '1px solid #1C2840', minWidth: 220, gap: 3 }}
+        style={{ borderRight: '1px solid #1C2840', minWidth: 220, gap: 2 }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-baseline gap-2">
           <span
-            className="font-bold tracking-tight leading-none"
-            style={{ color: '#E8EDF5', fontSize: 25 }}
+            className="font-bold tracking-tight"
+            style={{ color: '#E8EDF5', fontSize: 20, lineHeight: '1.1' }}
           >
             दृष्टि
           </span>
           <span
-            className="font-black tracking-[0.18em] leading-none"
-            style={{ color: '#3B8BEB', fontSize: 15 }}
+            className="font-black tracking-[0.18em]"
+            style={{ color: '#3B8BEB', fontSize: 13, lineHeight: '1.1' }}
           >
             DRISHTI
           </span>
         </div>
         <span
           className="font-medium tracking-wider whitespace-nowrap"
-          style={{ color: '#4A5568', fontSize: 9, lineHeight: 1 }}
+          style={{ color: '#4A5568', fontSize: 8, lineHeight: '1' }}
         >
           AUTONOMOUS INVESTMENT INTELLIGENCE
         </span>

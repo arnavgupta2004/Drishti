@@ -95,7 +95,7 @@ export default function ChartIntelligence() {
   return (
     <div className="flex flex-col min-h-full bg-[#070B14]">
       {/* Hero header */}
-      <div className="px-6 pt-4 pb-3 border-b border-[#1C2840] shrink-0">
+      <div className="px-8 pt-4 pb-3 border-b border-[#1C2840] shrink-0">
         <div className="flex items-start justify-between">
           {/* Stock identity */}
           <div>

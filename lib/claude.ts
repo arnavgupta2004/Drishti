@@ -37,7 +37,7 @@ Examples: "HDFC Bank technically strong hai. RSI 58 — not overbought." | "Aapk
   }
 }
 
-function buildSystemPrompt(language: Language = 'hinglish'): string {
+function buildSystemPrompt(language: Language = 'en'): string {
   return `You are DRISHTI (दृष्टि), an autonomous investment intelligence agent for Indian retail investors.
 Built for the ET Gen AI Hackathon. Tagline: "Aapka Personal Hedge Fund AI" 🇮🇳
 
@@ -68,8 +68,8 @@ Be a financial analyst, not a news anchor.`
 // ─── Groq-specific system prompt ────────────────────────────────────────────
 // Groq has no tools — it must give a DIRECT verdict without narrating workflow steps
 
-function buildGroqSystemPrompt(language: Language = 'hinglish'): string {
-  return `You are DRISHTI (दृष्टि), an autonomous investment intelligence AI for Indian retail investors. Tagline: "Aapka Personal Hedge Fund AI" 🇮🇳
+function buildGroqSystemPrompt(language: Language = 'en'): string {
+  return `You are DRISHTI, an autonomous investment intelligence AI for Indian retail investors.
 
 CRITICAL OUTPUT RULES — follow exactly:
 1. Start DIRECTLY with your insight. No preambles like "To initiate", "Let me analyze", "I'll follow".
@@ -159,7 +159,7 @@ function extractTickerFromQuery(query: string): string {
   return 'NSE'
 }
 
-async function* runGroqFallback(query: string, portfolio: Holding[], language: Language = 'hinglish'): AsyncGenerator<string> {
+async function* runGroqFallback(query: string, portfolio: Holding[], language: Language = 'en'): AsyncGenerator<string> {
   const groqKey = process.env.GROQ_API_KEY
   const stepLabels = ['Signal Detection', 'Technical Enrichment', 'Fundamental Check', 'Portfolio Personalization']
 
@@ -183,8 +183,22 @@ async function* runGroqFallback(query: string, portfolio: Holding[], language: L
     return
   }
 
-  // Clean up enriched query for Groq
-  const cleanQuery = query.replace(/\[EXTRACTED TICKER:[^\]]*\]/g, '').replace(/\[HINGLISH:[^\]]*\]/g, '').replace(/Clean intent:.*/, '').trim()
+  // Build a clean, explicit prompt for Groq — always include the extracted ticker
+  const tickerContext = ticker !== 'NSE' ? `Analyse ${ticker} stock on NSE.` : ''
+  const rawIntent = query
+    .replace(/\[EXTRACTED TICKER:[^\]]*\]/g, '')
+    .replace(/\[HINGLISH:[^\]]*\]/g, '')
+    .replace(/User query:/gi, '')
+    .replace(/Clean intent:/gi, '')
+    .split('\n').map(l => l.trim()).filter(Boolean).join(' ')
+    .trim()
+  const groqUserMessage = [
+    tickerContext,
+    rawIntent !== tickerContext.replace('Analyse ', '').replace(' stock on NSE.', '') ? rawIntent : '',
+    portfolio.length
+      ? `Portfolio: ${portfolio.map(h => `${h.ticker} (${h.qty} shares)`).join(', ')}`
+      : '',
+  ].filter(Boolean).join('\n')
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -194,7 +208,7 @@ async function* runGroqFallback(query: string, portfolio: Holding[], language: L
         model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: buildGroqSystemPrompt(language) },
-          { role: 'user', content: `${cleanQuery}\n\nPortfolio context: ${portfolio.length ? portfolio.map(h => `${h.ticker} (${h.qty} shares)`).join(', ') : 'No holdings'}` },
+          { role: 'user', content: groqUserMessage },
         ],
         max_tokens: 1024,
         temperature: 0.3,
@@ -216,7 +230,7 @@ async function* runGroqFallback(query: string, portfolio: Holding[], language: L
 
 // ─── Demo fallback (no credits needed) ───────────────────────────────────────
 
-async function* runDemoFallback(query: string, portfolio: Holding[], language: Language = 'hinglish'): AsyncGenerator<string> {
+async function* runDemoFallback(query: string, portfolio: Holding[], language: Language = 'en'): AsyncGenerator<string> {
   const rawQ = query.toLowerCase()
 
   // Extract ticker using the same broad logic as Groq fallback
@@ -307,7 +321,7 @@ export async function* runAgentLoop(
   query: string,
   portfolio: Holding[],
   isDemoMode = false,
-  language: Language = 'hinglish',
+  language: Language = 'en',
 ): AsyncGenerator<string> {
   // Try Claude; on any failure fall back to Groq (which itself falls back to demo)
   let client: ReturnType<typeof createClaudeClient>

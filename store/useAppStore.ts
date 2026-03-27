@@ -62,7 +62,7 @@ export const useAppStore = create<AppState>()(
       isDemoMode: true,
       setDemoMode: (v) => set({ isDemoMode: v }),
 
-      language: 'hinglish',
+      language: 'en',
       setLanguage: (l) => set({ language: l }),
 
       marketPulse: null,
