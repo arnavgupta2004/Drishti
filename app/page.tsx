@@ -11,9 +11,10 @@ import OpportunityRadar from '@/components/radar/OpportunityRadar'
 import ChartIntelligence from '@/components/chart/ChartIntelligence'
 import DrishtiAgent from '@/components/agent/DrishtiAgent'
 import PortfolioPanel from '@/components/portfolio/PortfolioPanel'
+import VideoEngine from '@/components/video/VideoEngine'
 
 export default function HomePage() {
-  const { portfolioOpen, setPortfolioOpen, isDemoMode, addMessage, setAgentRunning, isAgentRunning } = useAppStore()
+  const { portfolioOpen, setPortfolioOpen, videoEngineOpen, setVideoEngineOpen, isDemoMode, addMessage, setAgentRunning, isAgentRunning } = useAppStore()
   const { holdings } = usePortfolio()
 
   const runAgentQuery = useCallback(async (query: string) => {
@@ -137,6 +138,21 @@ export default function HomePage() {
           right={<DrishtiAgent />}
         />
       </div>
+
+      {/* Video Engine overlay */}
+      <AnimatePresence>
+        {videoEngineOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50"
+          >
+            <VideoEngine onClose={() => setVideoEngineOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Portfolio overlay */}
       <AnimatePresence>

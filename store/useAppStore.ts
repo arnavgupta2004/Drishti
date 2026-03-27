@@ -47,6 +47,10 @@ interface AppState {
   // Portfolio panel
   portfolioOpen: boolean
   setPortfolioOpen: (v: boolean) => void
+
+  // Video Engine panel
+  videoEngineOpen: boolean
+  setVideoEngineOpen: (v: boolean) => void
 }
 
 const DEFAULT_STEPS: AgentStep[] = [
@@ -109,6 +113,9 @@ export const useAppStore = create<AppState>()(
 
       portfolioOpen: false,
       setPortfolioOpen: (v) => set({ portfolioOpen: v }),
+
+      videoEngineOpen: false,
+      setVideoEngineOpen: (v) => set({ videoEngineOpen: v }),
     }),
     {
       name: 'drishti-store',

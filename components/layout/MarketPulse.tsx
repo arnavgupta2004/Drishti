@@ -106,7 +106,7 @@ const FALLBACK_LABELS = [
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function MarketPulse() {
-  const { marketPulse, isDemoMode, setDemoMode, setPortfolioOpen, portfolioOpen } = useAppStore()
+  const { marketPulse, isDemoMode, setDemoMode, setPortfolioOpen, portfolioOpen, videoEngineOpen, setVideoEngineOpen } = useAppStore()
   useMarketData()
 
   const tickerItems = marketPulse ? buildTickerItems(marketPulse) : []
@@ -225,6 +225,21 @@ export default function MarketPulse() {
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
           {isDemoMode ? 'Go Live' : 'Go Demo'}
+        </button>
+
+        {/* Video Engine button */}
+        <button
+          onClick={() => setVideoEngineOpen(!videoEngineOpen)}
+          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          style={{
+            background: videoEngineOpen ? 'rgba(59,139,235,0.15)' : 'rgba(59,139,235,0.07)',
+            border: '1px solid rgba(59,139,235,0.25)',
+            color: '#3B8BEB',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(59,139,235,0.15)')}
+          onMouseLeave={e => (e.currentTarget.style.background = videoEngineOpen ? 'rgba(59,139,235,0.15)' : 'rgba(59,139,235,0.07)')}
+        >
+          🎬 Video
         </button>
 
         {/* Portfolio button */}
