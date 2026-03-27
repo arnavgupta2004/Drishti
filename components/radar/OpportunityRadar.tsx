@@ -21,14 +21,16 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
     <div className="flex flex-col h-full" style={{ background: '#070B14' }}>
       {/* Header */}
       <div
-        className="relative flex items-center justify-center px-4 shrink-0"
+        className="flex items-center justify-between px-3 shrink-0"
         style={{ height: 44, borderBottom: '1px solid #1C2840' }}
       >
-        {/* Centered title + badge */}
+        {/* Title */}
+        <span className="text-[12px] font-bold text-[#8B95A8] uppercase tracking-wide">
+          Opportunity Radar
+        </span>
+
         <div className="flex items-center gap-2">
-          <span className="text-[13px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">
-            Opportunity Radar
-          </span>
+          {/* Badge */}
           {signals.length > 0 && (
             <span
               className="text-[11px] font-bold px-2 py-0.5 rounded-full"
@@ -37,14 +39,14 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
               {signals.length} signals
             </span>
           )}
-        </div>
-        {/* Live/Demo indicator pinned to right */}
-        <div className="absolute right-4 flex items-center gap-1.5">
-          <div
-            className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
-          />
-          <span className="text-[16px] text-[#4A5568]">{isDemoMode ? 'Demo' : 'Live'}</span>
+          {/* Live/Demo indicator */}
+          <div className="flex items-center gap-1.5">
+            <div
+              className="w-1.5 h-1.5 rounded-full animate-pulse"
+              style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
+            />
+            <span className="text-[11px] text-[#4A5568]">{isDemoMode ? 'Demo' : 'Live'}</span>
+          </div>
         </div>
       </div>
 
