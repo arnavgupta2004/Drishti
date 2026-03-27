@@ -4,6 +4,7 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 import type { Holding } from '@/types'
 import { DRISHTI_TOOLS, executeTool } from './tools'
+import { TICKER_BASE_PRICES } from './yahoo'
 
 // Next.js can cache a stale empty value if the env file was written after first
 // server start. Read it directly as a reliable fallback.
@@ -265,14 +266,18 @@ async function* runDemoFallback(query: string, portfolio: Holding[], language: L
     yield `data: ${JSON.stringify({ type: 'step', step: i + 1, label, status: 'done', detail: Object.values(stepData)[i] })}\n\n`
   }
 
-  const isTitan = ticker === 'TITAN'
   const tkr = ticker ?? 'NSE'
-  const action = isTitan ? 'BUY' : ticker ? 'ACCUMULATE' : 'WATCH'
-  const entry = isTitan ? '3,820–3,860' : ticker === 'RELIANCE' ? '2,900–2,940' : ticker === 'HDFC' ? '1,620–1,650' : '—'
-  const sl = isTitan ? '3,740' : ticker === 'RELIANCE' ? '2,830' : ticker === 'HDFC' ? '1,570' : '—'
-  const tgt = isTitan ? '4,200' : ticker === 'RELIANCE' ? '3,180' : ticker === 'HDFC' ? '1,820' : '—'
-  const score = isTitan ? '84' : ticker ? '76' : '—'
-  const growth = isTitan ? '22%' : '18%'
+
+  // Compute dynamic price levels from TICKER_BASE_PRICES for any known ticker
+  const basePrice = ticker ? (TICKER_BASE_PRICES[ticker] ?? 0) : 0
+  const fmt = (n: number) => Math.round(n).toLocaleString('en-IN')
+  const hasPrice = basePrice > 0
+  const action = !ticker ? 'WATCH' : !hasPrice ? 'WATCH' : 'ACCUMULATE'
+  const entry = hasPrice ? `${fmt(basePrice * 0.98)}–${fmt(basePrice * 1.00)}` : '—'
+  const sl    = hasPrice ? fmt(basePrice * 0.94) : '—'
+  const tgt   = hasPrice ? fmt(basePrice * 1.13) : '—'
+  const score = !ticker ? '—' : !hasPrice ? '72' : '76'
+  const growth = '18%'
 
   const isGreeting = /\b(hi|hello|namaskar|namaste|hey)\b/.test(rawQ)
   const isPortfolio = rawQ.includes('portfolio') || rawQ.includes('health')
@@ -298,10 +303,15 @@ async function* runDemoFallback(query: string, portfolio: Holding[], language: L
       hinglish: `${name} NSE/BSE pe listed nahi hai — yeh NYSE/NASDAQ stock hai.\n\nDRISHTI sirf Indian markets cover karta hai. US exposure ke liye:\n• Motilal NASDAQ 100 ETF\n• Mirae Asset NYSE FANG+ ETF\n• DSP US Flexible Equity Fund\n\nKoi Indian stock batao — RELIANCE, HDFC, TCS, TITAN?`,
     }[language]
   } else if (ticker) {
+    // Price levels only shown if we have a known base price; unknown tickers get WATCH
+    const priceLinesEn  = hasPrice ? `\n\nEntry Zone: ₹${entry}\nStop Loss: ₹${sl}\nTarget: ₹${tgt} (3-4 months)` : ''
+    const priceLinesHi  = hasPrice ? `\n\nप्रवेश क्षेत्र: ₹${entry}\nस्टॉप लॉस: ₹${sl}\nलक्ष्य: ₹${tgt} (3-4 महीने)` : ''
+    const priceLinesHgl = hasPrice ? `\n\nEntry Zone: ₹${entry}\nStop Loss: ₹${sl}\nTarget: ₹${tgt} (3-4 months)` : ''
+    const notListedNote = !hasPrice ? `\n\nNote: ${tkr} may not be listed on NSE/BSE or may be a recently listed stock. Verify the ticker symbol and check with your broker.` : ''
     verdict = {
-      en: `${tkr} shows strong momentum with insider accumulation signals. RSI at 58 — healthy, not overbought. Q3 results confirmed ${growth} profit growth with a debt-free balance sheet. Volume running at 3.2x average, suggesting institutional interest.\n\nACTION: ${action}\n\nEntry Zone: ₹${entry}\nStop Loss: ₹${sl}\nTarget: ₹${tgt} (3-4 months)\nNivesh Score: ${score}/100\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance Live`,
-      hi: `${tkr} में मजबूत गति है। RSI 58 — overbought नहीं। Q3 नतीजों में ${growth} मुनाफा वृद्धि। वॉल्यूम औसत से 3.2 गुना — संस्थागत रुचि दिख रही है।\n\nACTION: ${action}\n\nप्रवेश क्षेत्र: ₹${entry}\nस्टॉप लॉस: ₹${sl}\nलक्ष्य: ₹${tgt} (3-4 महीने)\nनिवेश स्कोर: ${score}/100\n\nस्रोत: NSE Insider Filing, Q3FY25 Results, Yahoo Finance`,
-      hinglish: `${tkr} mein strong momentum hai — insider accumulation signals aa rahe hain. RSI 58 — not overbought. Q3 results mein ${growth} profit growth confirm hua, debt-free balance sheet ke saath. Volume 3.2x average — institutional interest dikh raha hai.\n\nACTION: ${action}\n\nEntry Zone: ₹${entry}\nStop Loss: ₹${sl}\nTarget: ₹${tgt} (3-4 months)\nNivesh Score: ${score}/100\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance Live`,
+      en: `${tkr} shows strong momentum with insider accumulation signals. RSI at 58 — healthy, not overbought. Q3 results confirmed ${growth} profit growth with a debt-free balance sheet. Volume running at 3.2x average, suggesting institutional interest.\n\nACTION: ${action}${priceLinesEn}\nNivesh Score: ${score}/100${notListedNote}\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance Live`,
+      hi: `${tkr} में मजबूत गति है। RSI 58 — overbought नहीं। Q3 नतीजों में ${growth} मुनाफा वृद्धि। वॉल्यूम औसत से 3.2 गुना — संस्थागत रुचि दिख रही है।\n\nACTION: ${action}${priceLinesHi}\nनिवेश स्कोर: ${score}/100\n\nस्रोत: NSE Insider Filing, Q3FY25 Results, Yahoo Finance`,
+      hinglish: `${tkr} mein strong momentum hai — insider accumulation signals aa rahe hain. RSI 58 — not overbought. Q3 results mein ${growth} profit growth confirm hua, debt-free balance sheet ke saath. Volume 3.2x average — institutional interest dikh raha hai.\n\nACTION: ${action}${priceLinesHgl}\nNivesh Score: ${score}/100\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance Live`,
     }[language]
   } else {
     verdict = {

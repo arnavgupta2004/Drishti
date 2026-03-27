@@ -10,7 +10,7 @@ function toNSETicker(ticker: string): string {
 // Used by both getFallbackPrice (for stock quotes) and generateFallbackOHLCV (for charts).
 // Unknown tickers get price 0 — callers must check price > 0 before using.
 
-const TICKER_BASE_PRICES: Record<string, number> = {
+export const TICKER_BASE_PRICES: Record<string, number> = {
   // ── Nifty 50 ──────────────────────────────────────────────────────────────
   RELIANCE: 2824,   HDFCBANK: 1762,   TCS: 3842,      INFY: 1876,    TITAN: 3462,
   WIPRO: 318,       ITC: 452,         BAJFINANCE: 6240, TATASTEEL: 136, ONGC: 248,
