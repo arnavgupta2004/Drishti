@@ -32,8 +32,9 @@ export default function SignalCard({ signal, index, onAnalyse, onCardClick }: Pr
       initial={{ x: -12, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: index * 0.05, duration: 0.28, ease: 'easeOut' }}
-      className="group relative rounded-xl px-3.5 py-4 cursor-pointer transition-all duration-300 ease-out"
+      className="group relative rounded-xl cursor-pointer transition-all duration-300 ease-out"
       style={{
+        padding: '14px 16px 12px 16px',
         background: '#0D1421',
         border: signal.is_new ? `1px solid ${signalColor}50` : '1px solid #243048',
         boxShadow: '0 4px 20px rgba(0,0,0,0.45)',
