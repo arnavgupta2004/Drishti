@@ -21,9 +21,10 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
     <div className="flex flex-col h-full" style={{ background: '#070B14' }}>
       {/* Header */}
       <div
-        className="flex items-center justify-between px-4 shrink-0"
+        className="relative flex items-center justify-center px-4 shrink-0"
         style={{ height: 44, borderBottom: '1px solid #1C2840' }}
       >
+        {/* Centered title + badge */}
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">
             Opportunity Radar
@@ -37,7 +38,8 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1.5">
+        {/* Live/Demo indicator pinned to right */}
+        <div className="absolute right-4 flex items-center gap-1.5">
           <div
             className="w-1.5 h-1.5 rounded-full animate-pulse"
             style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
