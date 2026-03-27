@@ -19,12 +19,12 @@ export default function ThreePanelLayout({ left, center, right }: Props) {
       </div>
 
       {/* Divider — left ↔ center */}
-      <div className="shrink-0 w-[3px] self-stretch" style={{ background: '#0A0F1C' }} />
+      <div className="shrink-0 w-[8px] self-stretch" style={{ background: '#040710' }} />
 
       {/* Center: Chart Intelligence — hero */}
       <div
         className="flex-1 min-w-0 flex flex-col overflow-y-auto relative"
-        style={{ borderRight: chatOpen ? '2px solid #0A0F1C' : 'none' }}
+        style={{ borderRight: chatOpen ? '8px solid #040710' : 'none' }}
       >
         {center}
 
