@@ -71,7 +71,9 @@ Runs on every user query before Claude. Extracts:
 - **Intent** — clean English reformulation of Hinglish/Hindi queries
 - **Language** — detects if user is writing in Hindi/Hinglish
 
-Falls back to a 50+ entry local `NAME_TO_TICKER` regex map if Groq is unavailable.
+Falls back to a 100+ entry local `NAME_TO_TICKER` regex map if Groq is unavailable.
+
+**Unlisted company handling:** If the company is not listed on NSE/BSE (e.g., Zerodha, boAt), Groq returns `UNLISTED:<company_name>`. The agent route intercepts this prefix and emits a friendly explanation instead of attempting a fake stock lookup — preventing ₹0 data or hallucinated analysis.
 
 ---
 
@@ -120,6 +122,87 @@ Three-tier fallback:
    - Penalizes single stock > 35% (−12pts), > 25% (−6pts)
    - Penalizes portfolio drawdown > 15% (−10pts)
    - Always uses **actual** portfolio data — never hardcoded
+
+---
+
+## Signals Pipeline
+
+**Endpoint:** `GET /api/signals`
+**Cache TTL:** 5 minutes (standard signals), 30 minutes (SEBI regulatory alerts)
+
+The signals pipeline runs four sources in parallel on every refresh:
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│                    /api/signals GET                             │
+├──────────────────┬─────────────────┬──────────────┬───────────┤
+│ NSE Bulk Deals   │ Base Signals    │ Mgmt         │ SEBI      │
+│ (live API)       │ (demo-data.ts)  │ Commentary   │ Alerts    │
+│                  │                 │ (Groq 70b)   │ (scrape + │
+│ → getStockPrice  │ → seeded per    │              │  Groq fb) │
+│ → Groq sentiment │   ticker        │ → getStock   │           │
+│                  │                 │   Price      │ 30-min    │
+│ max 3 deals      │                 │              │ cache     │
+└──────────────────┴─────────────────┴──────────────┴───────────┘
+                           ↓
+              Merge → cap at 12 signals → cache
+```
+
+### Signal Types (12 total)
+
+| Type | Icon | Source | Sentiment |
+|------|------|--------|-----------|
+| `insider_buy` | 🔥 | NSE filings | Groq |
+| `insider_sell` | 🚨 | NSE filings | Groq |
+| `breakout_52w` | 📈 | Yahoo price data | Groq |
+| `volume_spike` | 📊 | Volume ratio > 2× | Groq |
+| `fii_accumulation` | 🏦 | FII flow data | Groq |
+| `fii_selling` | 🏦 | FII flow data | Groq |
+| `strong_results` | 📋 | NSE quarterly data | Groq |
+| `promoter_pledge` | ⚠️ | NSE filings | Groq |
+| `bulk_deal` | 🔔 | NSE bulk deal API | Groq |
+| `reversal_pattern` | 📉 | Chart analysis | Groq |
+| `management_commentary` | 🗣️ | Groq (llama-3.3-70b) scans top 10 Nifty stocks for earnings language shifts | Groq |
+| `regulatory_alert` | ⚖️ | SEBI circulars page → Groq fallback | Rule-based |
+
+### Management Commentary Signal
+
+Groq llama-3.3-70b is prompted to surface one significant management language shift from 10 watch-list stocks (RELIANCE, TCS, HDFCBANK, INFY, ICICIBANK, BAJFINANCE, BHARTIARTL, ZOMATO, TATAMOTORS, SUNPHARMA). Detects: guidance cuts, margin warnings, expansion announcements, CEO changes, capex plans.
+
+### Regulatory Alert Signal
+
+1. Fetches `https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doRecent=yes`
+2. Parses circular titles from HTML table cells using regex
+3. If SEBI is unreachable, falls back to Groq llama-3.1-8b for the most recent notable SEBI circular
+4. Results cached for 30 minutes to avoid hammering SEBI's servers
+
+---
+
+## AI Video Engine
+
+**Endpoint:** `POST /api/video/generate`
+
+```
+POST body: { type: "market_wrap" | "race_chart" | "fii_dii" | "ipo_tracker" }
+
+Pipeline:
+  1. Fetch live data from /api/market/pulse (req.nextUrl.origin, 8s timeout)
+  2. Fall back to getDemoMarketData() if pulse returns empty indices
+  3. Call Groq llama-3.3-70b to write a Hinglish voiceover script
+  4. Return { script, marketData, sectorData, ipoData }
+
+Frontend:
+  - HTML5 Canvas 2D animations (requestAnimationFrame, no video libs)
+  - MediaRecorder captures canvas stream at 30fps → WebM blob → download URL
+  - Auto Mode: regenerates every 60s via setInterval
+```
+
+| Template | Duration | Key Visuals |
+|----------|----------|-------------|
+| Daily Market Wrap | 45s | 5 scenes: intro, index cards (count-up), gainers/losers bars, FII/DII arcs, outro |
+| Sector Race Chart | 30s | 8 sectors racing over 5 days, leader highlighted gold |
+| FII/DII Flow | 30s | Particle streams, green=buy, red=sell |
+| IPO Tracker | 45s | IPO cards animating in with subscription fill bars and GMP |
 
 ---
 
@@ -220,6 +303,7 @@ Zustand Store (persisted to localStorage)
 ├── marketPulse: MarketPulseData — indices, movers, FII/DII
 ├── isDemoMode: boolean          — Demo vs Live mode toggle
 ├── portfolioOpen: boolean       — portfolio panel visibility
+├── videoEngineOpen: boolean     — Video Engine overlay visibility
 └── portfolio
     ├── holdings: Holding[]      — user's stocks with qty/avg
     └── [computed by calcPortfolio()]

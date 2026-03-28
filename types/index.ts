@@ -94,6 +94,8 @@ export type SignalType =
   | 'promoter_pledge'
   | 'bulk_deal'
   | 'reversal_pattern'
+  | 'management_commentary'
+  | 'regulatory_alert'
 
 export interface Signal {
   id: string

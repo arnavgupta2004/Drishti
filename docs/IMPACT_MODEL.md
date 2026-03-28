@@ -174,6 +174,12 @@ Annual revenue:     ₹89.7 Crore (~$10.8M ARR)
 
 **Behavior change:** By showing *why* before showing *what* (the 4-step DETECT → ENRICH → PERSONALIZE → RECOMMEND workflow), DRISHTI trains investors to think analytically rather than react emotionally to tips.
 
+**Proactive intelligence:** Most retail investors only find out about management guidance cuts or SEBI circulars days later — via news, or worse, after their broker mentions it. DRISHTI's Opportunity Radar surfaces:
+- **Management Commentary signals** (🗣️) — AI monitors earnings call language for guidance cuts, margin warnings, and expansion announcements across top Nifty 50 stocks
+- **SEBI Regulatory Alerts** (⚖️) — Automatically fetches the latest SEBI circulars and notifies users of regulatory changes that may impact their holdings
+
+This closes the information gap between retail investors and institutional participants who have dedicated research teams watching these same signals daily.
+
 ---
 
 *Numbers are back-of-envelope estimates. Sources: NSE Annual Report 2024, SEBI Investor Survey 2023, CDSL/NSDL demat account data, Anthropic/Groq public API pricing (March 2026).*

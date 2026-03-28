@@ -69,6 +69,8 @@ export const SIGNAL_ICONS: Record<string, string> = {
   promoter_pledge: '⚠️',
   bulk_deal: '🔔',
   reversal_pattern: '📉',
+  management_commentary: '🗣️',
+  regulatory_alert: '⚖️',
 }
 
 export const SIGNAL_LABELS: Record<string, string> = {
@@ -82,6 +84,8 @@ export const SIGNAL_LABELS: Record<string, string> = {
   promoter_pledge: 'Promoter Pledge',
   bulk_deal: 'Bulk Deal Alert',
   reversal_pattern: 'Reversal Pattern',
+  management_commentary: 'Mgmt Commentary',
+  regulatory_alert: 'SEBI Alert',
 }
 
 export const SIGNAL_COLORS: Record<string, string> = {
@@ -95,6 +99,8 @@ export const SIGNAL_COLORS: Record<string, string> = {
   promoter_pledge: 'text-accent-gold',
   bulk_deal: 'text-accent-gold',
   reversal_pattern: 'text-accent-gold',
+  management_commentary: 'text-accent-blue',
+  regulatory_alert: 'text-accent-gold',
 }
 
 // ─── Score to Grade ───────────────────────────────────────────────────────────

@@ -9,9 +9,9 @@ DRISHTI is an AI-powered stock market analysis platform for NSE/BSE listed stock
 ## Features
 
 - **Live Market Pulse** — NIFTY, SENSEX, BANK NIFTY, VIX, FII/DII flows, top gainers & losers in a continuously scrolling ticker
-- **Opportunity Radar** — Real-time signal cards (insider buys, bulk deals, breakouts, quarterly results) sourced from NSE bulk deal data
+- **Opportunity Radar** — Real-time signal cards sourced from NSE bulk deal data and AI-generated intelligence. 12 signal types including insider buys, breakouts, bulk deals, volume spikes, FII accumulation, quarterly results, **management commentary** (🗣️), and **SEBI regulatory alerts** (⚖️)
 - **Chart Intelligence** — Interactive candlestick charts with EMA20/50/200, Bollinger Bands, RSI, MACD, ADX, ATR, and AI-powered pattern detection
-- **DRISHTI Agent** — Conversational AI for stock analysis using a 4-step pipeline: Signal Detection → Technical Enrichment → Fundamental Check → Portfolio Personalization
+- **DRISHTI Agent** — Conversational AI for stock analysis using a 4-step pipeline: Signal Detection → Technical Enrichment → Fundamental Check → Portfolio Personalization. Understands any Indian company name, brand, or product — maps to the correct NSE ticker automatically
 - **Portfolio Tracker** — Add holdings, track P&L live, and get AI-generated health scores with sector analysis
 - **Stock Info Drawer** — Click any signal to see full company details: technicals, fundamentals, quarterly results
 - **AI Video Engine** — Autonomous pipeline that generates animated market update videos (WebM) from live data — zero human editing. 4 templates: Daily Market Wrap, Sector Race Chart, FII/DII Flow, IPO Tracker. Auto Mode regenerates every 60 seconds.
@@ -25,10 +25,13 @@ DRISHTI uses a cost-efficient multi-model routing strategy:
 | Task | Primary | Fallback |
 |------|---------|----------|
 | Stock analysis chat | Claude Sonnet | Groq llama-3.3-70b |
-| Intent / ticker extraction | Groq llama-3.1-8b | Local regex |
+| Intent / ticker extraction | Groq llama-3.1-8b | Local regex (100+ names) |
+| Unlisted company detection | Groq llama-3.1-8b | `UNLISTED:<name>` prefix handling |
 | Chart pattern detection | Claude Sonnet | Groq llama-3.3-70b → seeded demo |
 | Portfolio health score | Claude Sonnet | Groq → rule-based calculator |
 | Signal sentiment | Groq llama-3.1-8b | Rule-based |
+| Management commentary signal | Groq llama-3.3-70b | Skipped gracefully |
+| SEBI regulatory alerts | SEBI website scrape | Groq llama-3.1-8b knowledge |
 | Video voiceover script | Groq llama-3.3-70b | Seeded Hinglish templates |
 
 ---
@@ -116,15 +119,16 @@ drishti/
 │   └── video/              # VideoEngine, MarketWrapAnimation, RaceChartAnimation,
 │                           #   FIIDIIFlow, IPOTracker (Canvas 2D + WebM export)
 ├── lib/
-│   ├── aiRouter.ts         # Groq intent extraction & signal sentiment
+│   ├── aiRouter.ts         # Groq intent extraction, sentiment, & UNLISTED handling
 │   ├── claude.ts           # Claude + Groq agent loop with SSE streaming
 │   ├── demo-data.ts        # Seeded demo signals, OHLCV, market pulse
 │   ├── nse.ts              # NSE bulk deals, quarterly results
 │   ├── nse-tickers.ts      # 100+ NSE tickers for validation & autocomplete
 │   ├── patterns.ts         # 12-pattern library with seeded demo generator
 │   ├── portfolio.ts        # P&L calculation, portfolio scoring
+│   ├── signals.ts          # Signal helpers: icons, labels, colors, Nivesh score calc
 │   ├── tools.ts            # Claude tool definitions (get_stock_price, etc.)
-│   └── yahoo.ts            # Yahoo Finance wrapper with seeded fallbacks
+│   └── yahoo.ts            # Yahoo Finance wrapper + exported TICKER_BASE_PRICES
 ├── hooks/
 │   ├── useMarketData.ts    # Market pulse polling
 │   └── usePortfolio.ts     # Portfolio live price refresh
@@ -160,6 +164,27 @@ Click **🎬 Video** in the top bar to open the Video Engine — a fully autonom
 ### Auto Mode
 
 Toggle **🔴 Auto Mode** to enable fully autonomous operation: every 60 seconds, DRISHTI automatically fetches fresh market data, regenerates the AI script, and re-renders the Market Wrap animation. A live indicator shows when the last update occurred.
+
+---
+
+## Signal Types
+
+The Opportunity Radar surfaces 12 distinct signal types, all enriched with Groq sentiment:
+
+| Icon | Type | Source |
+|------|------|--------|
+| 🔥 | Insider Buy | NSE filings |
+| 🚨 | Insider Sell | NSE filings |
+| 📈 | 52-Week Breakout | Yahoo Finance price data |
+| 📊 | Unusual Volume | Volume ratio > 2× 30-day avg |
+| 🏦 | FII Accumulation | NSE bulk deals + FII flow data |
+| 🏦 | FII Selling | NSE bulk deals + FII flow data |
+| 📋 | Strong Results | Quarterly PAT growth > 15% |
+| ⚠️ | Promoter Pledge | NSE corporate filings |
+| 🔔 | Bulk Deal Alert | NSE bulk deal API (live) |
+| 📉 | Reversal Pattern | Chart pattern detection |
+| 🗣️ | Mgmt Commentary | Groq analysis of language shifts in earnings calls |
+| ⚖️ | SEBI Alert | SEBI circulars page (30-min cache) + Groq fallback |
 
 ---
 
