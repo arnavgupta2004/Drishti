@@ -2,6 +2,8 @@
 
 **Autonomous Investment Intelligence for Indian Markets**
 
+🌐 **Live Demo:** [bharat-nivesh.vercel.app](https://bharat-nivesh.vercel.app)
+
 DRISHTI is an AI-powered stock market analysis platform for NSE/BSE listed stocks. It combines real-time market data, multi-model AI reasoning, and technical chart analysis to deliver institutional-grade insights for retail investors.
 
 ---
@@ -200,7 +202,9 @@ When no API keys are configured, DRISHTI runs in **Demo Mode** with:
 
 ## Deployment
 
-Deploy to Vercel in one click:
+**Live deployment:** [bharat-nivesh.vercel.app](https://bharat-nivesh.vercel.app)
+
+Deploy your own copy to Vercel in one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/arnavgupta2004/Drishti)
 
