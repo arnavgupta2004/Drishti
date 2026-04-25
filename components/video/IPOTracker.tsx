@@ -99,7 +99,7 @@ const IPOTracker = forwardRef<AnimationHandle, Props>(({ data, onComplete, isPla
 
     ctx.fillStyle = '#4A5568'
     ctx.font = '11px sans-serif'
-    ctx.fillText('Live Subscription & Grey Market Premium Data', W / 2, 56)
+    ctx.fillText('Latest Available Subscription & Grey Market Premium Data', W / 2, 56)
 
     // ── Cards layout: 3 top + 2 bottom ─────────────────────────────────────
     const cardW = 280

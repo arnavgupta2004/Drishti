@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Loader2, Sparkles, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
+import SourceBadge from '@/components/shared/SourceBadge'
+import { formatSourceTime } from '@/lib/data-source'
 import type { OHLCV, Technicals, ChartPattern, StockPrice, Fundamentals, QuarterlyResult } from '@/types'
 import { NSE_TICKERS, searchNSETickers } from '@/lib/nse-tickers'
 import CandlestickChart from './CandlestickChart'
@@ -114,7 +116,16 @@ export default function ChartIntelligence() {
                 <div className="skeleton h-6 w-32 mt-1" />
               ) : null}
             </div>
-            <span className="text-[14px] text-[#8B95A8]">NSE · Chart Intelligence</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[14px] text-[#8B95A8]">NSE · Chart Intelligence</span>
+              {price?.source ? <SourceBadge source={price.source} compact /> : null}
+              {price?.source?.as_of ? (
+                <span className="text-[12px] text-[#4A5568]">As of {formatSourceTime(price.source.as_of)}</span>
+              ) : null}
+            </div>
+            {price?.source?.note ? (
+              <div className="text-[12px] text-[#4A5568] mt-1">{price.source.note}</div>
+            ) : null}
           </div>
 
           {/* Search + Detect */}

@@ -4,6 +4,7 @@ import { getBulkDeals } from '@/lib/nse'
 import { getStockPrice } from '@/lib/yahoo'
 import { classifySignalSentiment } from '@/lib/aiRouter'
 import { DEMO_SIGNALS } from '@/lib/demo-data'
+import { makeSourceMeta } from '@/lib/data-source'
 import type { Signal } from '@/types'
 
 export const runtime = 'nodejs'
@@ -25,12 +26,20 @@ export async function GET(req: NextRequest) {
     // In demo mode still run Groq sentiment on the static signals (shows routing live)
     const enriched = await enrichSignalsWithGroq(DEMO_SIGNALS.slice(0, 4))
     const rest = DEMO_SIGNALS.slice(4)
-    return NextResponse.json({ signals: [...enriched, ...rest], cached: false })
+    return NextResponse.json({
+      signals: [...enriched, ...rest].map((signal) => ({ ...signal, source_state: 'demo' as const })),
+      cached: false,
+      meta: makeSourceMeta('demo', Date.now(), 'Presentation radar dataset enabled from the demo toggle'),
+    })
   }
 
   const now = Date.now()
   if (signalCache.length > 0 && now - lastRefresh < CACHE_TTL) {
-    return NextResponse.json({ signals: signalCache, cached: true })
+    return NextResponse.json({
+      signals: signalCache,
+      cached: true,
+      meta: makeSourceMeta('cached', lastRefresh, 'Radar cached for 5 minutes to avoid rate limits', 'Cached'),
+    })
   }
 
   try {
@@ -73,6 +82,7 @@ export async function GET(req: NextRequest) {
           nivesh_score: Math.round(deal.dealType === 'BUY' ? 65 + Math.random() * 20 : 30 + Math.random() * 20),
           timestamp: Date.now(),
           is_new: true,
+          source_state: deal.source_state === 'live' && priceData.source.state === 'live' ? 'live' : 'fallback',
         })
       } catch { /* skip */ }
     }
@@ -88,9 +98,21 @@ export async function GET(req: NextRequest) {
     signalCache = freshSignals.slice(0, 12)
     lastRefresh = now
 
-    return NextResponse.json({ signals: signalCache, cached: false })
+    return NextResponse.json({
+      signals: signalCache,
+      cached: false,
+      meta: makeSourceMeta(
+        'reference',
+        now,
+        'Radar combines curated reference signals with live enrichment when public feeds are available.',
+      ),
+    })
   } catch {
-    return NextResponse.json({ signals: DEMO_SIGNALS, cached: false })
+    return NextResponse.json({
+      signals: DEMO_SIGNALS.map((signal) => ({ ...signal, source_state: 'fallback' as const })),
+      cached: false,
+      meta: makeSourceMeta('fallback', Date.now(), 'Reference radar used because fresh signal generation failed'),
+    })
   }
 }
 
@@ -188,6 +210,7 @@ Respond ONLY with this JSON (no markdown):
       nivesh_score: Math.round(Math.min(100, Math.max(0, parsed.nivesh_score ?? 60))),
       timestamp: Date.now(),
       is_new: true,
+      source_state: 'reference',
       groq_sentiment: (['bullish', 'bearish', 'neutral'].includes(parsed.sentiment ?? '') ? parsed.sentiment : 'neutral') as 'bullish' | 'bearish' | 'neutral',
       groq_reason: 'Management language shift detected',
       groq_confidence: 0.75,
@@ -242,6 +265,7 @@ async function fetchSebiSignals(): Promise<Signal[]> {
           nivesh_score: 55,
           timestamp: Date.now(),
           is_new: true,
+          source_state: 'live' as const,
           groq_sentiment: 'neutral' as const,
           groq_reason: 'SEBI regulatory update',
           groq_confidence: 0.8,
@@ -298,6 +322,7 @@ Respond ONLY with this JSON (no markdown):
       nivesh_score: 55,
       timestamp: Date.now(),
       is_new: true,
+      source_state: 'reference',
       groq_sentiment: 'neutral',
       groq_reason: 'SEBI regulatory update',
       groq_confidence: 0.7,

@@ -1,4 +1,5 @@
 import type { Signal, MarketPulseData, OHLCV, ChartPattern, AgentAlert, PortfolioHealthScore } from '@/types'
+import { makeSourceMeta } from '@/lib/data-source'
 
 // ─── Demo Signals (March 2026) ────────────────────────────────────────────────
 
@@ -15,6 +16,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 84,
     timestamp: Date.now() - 2 * 60 * 1000,
     is_new: true,
+    source_state: 'demo',
   },
   {
     id: 'sig_2',
@@ -28,6 +30,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 82,
     timestamp: Date.now() - 6 * 60 * 1000,
     is_new: true,
+    source_state: 'demo',
   },
   {
     id: 'sig_3',
@@ -41,6 +44,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 74,
     timestamp: Date.now() - 15 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_4',
@@ -54,6 +58,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 81,
     timestamp: Date.now() - 22 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_5',
@@ -67,6 +72,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 73,
     timestamp: Date.now() - 35 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_6',
@@ -80,6 +86,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 69,
     timestamp: Date.now() - 48 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_7',
@@ -93,6 +100,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 71,
     timestamp: Date.now() - 65 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_8',
@@ -106,6 +114,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 87,
     timestamp: Date.now() - 90 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_9',
@@ -119,6 +128,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 68,
     timestamp: Date.now() - 110 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_10',
@@ -132,6 +142,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 76,
     timestamp: Date.now() - 130 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_11',
@@ -145,6 +156,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 62,
     timestamp: Date.now() - 150 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
   {
     id: 'sig_12',
@@ -158,6 +170,7 @@ export const DEMO_SIGNALS: Signal[] = [
     nivesh_score: 66,
     timestamp: Date.now() - 170 * 60 * 1000,
     is_new: false,
+    source_state: 'demo',
   },
 ]
 
@@ -184,6 +197,7 @@ export const DEMO_MARKET_PULSE: MarketPulseData = {
     { ticker: 'TATASTEEL',  company: 'Tata Steel',   change_pct: -1.3 },
   ],
   timestamp: Date.now(),
+  source: makeSourceMeta('demo', Date.now(), 'Presentation market pulse dataset'),
 }
 
 // ─── Demo OHLCV ───────────────────────────────────────────────────────────────
@@ -260,7 +274,7 @@ export const DEMO_ALERT_TITAN: AgentAlert = {
   target: 3820,
   verdict_en: 'Titan Company shows strong insider buying by Tata Sons. Technically bullish above 50 EMA at ₹3,380. Fundamentals solid with 18% profit growth YoY and expanding jewellery market share. Volume confirmation present on breakout.',
   verdict_hi: 'Titan mein promoter ki strong buying aa rahi hai. RSI 56 hai — overbought nahi. Technically acha setup hai. Entry zone ₹3,420-3,480 mein consider karein, stop loss ₹3,340 ke neeche. Target ₹3,820.',
-  sources: ['NSE Insider Filing Mar-2026', 'Q3FY26 Results', 'Yahoo Finance Live', 'NSE Bulk Deal Data'],
+  sources: ['NSE Insider Filing Mar-2026', 'Q3FY26 Results', 'Yahoo Finance quote feed', 'NSE Bulk Deal Data'],
   steps: [
     { step: 1, label: 'Signal Detection',        status: 'done', detail: 'Promoter buying 2.3L shares at ₹3,462 detected' },
     { step: 2, label: 'Technical Enrichment',    status: 'done', detail: 'RSI: 56 | Above 50EMA | MACD positive crossover' },

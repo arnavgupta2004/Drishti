@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { RefreshCw } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { useSignals } from '@/hooks/useSignals'
+import SourceBadge from '@/components/shared/SourceBadge'
+import { formatSourceTime } from '@/lib/data-source'
 import SignalCard from './SignalCard'
 import StockInfoDrawer from './StockInfoDrawer'
 import type { Signal } from '@/types'
@@ -13,7 +15,7 @@ interface Props {
 }
 
 export default function OpportunityRadar({ onAnalyseSignal }: Props) {
-  const { signals, isDemoMode } = useAppStore()
+  const { signals, signalsMeta } = useAppStore()
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null)
   useSignals()
 
@@ -39,14 +41,7 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
               {signals.length} signals
             </span>
           )}
-          {/* Live/Demo indicator */}
-          <div className="flex items-center gap-1.5">
-            <div
-              className="w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
-            />
-            <span className="text-[11px] text-[#4A5568]">{isDemoMode ? 'Demo' : 'Live'}</span>
-          </div>
+          {signalsMeta ? <SourceBadge source={signalsMeta} compact /> : null}
         </div>
       </div>
 
@@ -79,7 +74,9 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
       {/* Footer */}
       <div className="px-4 py-2 shrink-0" style={{ borderTop: '1px solid #1C2840' }}>
         <p className="text-[15px] text-[#4A5568] text-center tracking-wide">
-          Tap a signal to view company details · Auto-refresh 5 min
+          {signalsMeta?.as_of
+            ? `${signalsMeta.label} radar · refreshed ${formatSourceTime(signalsMeta.as_of)}`
+            : 'Tap a signal to view company details'}
         </p>
       </div>
 

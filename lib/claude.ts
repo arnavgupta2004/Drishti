@@ -287,7 +287,7 @@ async function* runDemoFallback(query: string, portfolio: Holding[], language: L
     verdict = {
       en: `Hello! I'm DRISHTI — your autonomous investment intelligence AI for Indian markets. 🇮🇳\n\nI can help you with:\n• Real-time NSE/BSE signal detection\n• Technical + fundamental analysis\n• Portfolio impact assessment\n• Actionable buy/sell recommendations\n\nWhich stock shall we analyse today?`,
       hi: `नमस्कार! मैं DRISHTI हूँ — आपका भारतीय बाजार AI सहायक। 🇮🇳\n\nमैं आपकी इस तरह मदद कर सकता हूँ:\n• NSE/BSE सिग्नल पहचान\n• तकनीकी + मूलभूत विश्लेषण\n• पोर्टफोलियो प्रभाव आकलन\n• खरीद/बिक्री सिफारिशें\n\nआज कौन सा शेयर देखें?`,
-      hinglish: `Namaskar! Main DRISHTI hoon — aapka personal hedge fund AI. 🇮🇳\n\nMain aapke liye karta hoon:\n• Live NSE/BSE signals detect\n• Technical + fundamental analysis\n• Portfolio impact calculate\n• Clear buy/sell recommendations\n\nKaunsa stock analyse karein aaj?`,
+      hinglish: `Namaskar! Main DRISHTI hoon — aapka personal hedge fund AI. 🇮🇳\n\nMain aapke liye karta hoon:\n• Latest available NSE/BSE signals detect\n• Technical + fundamental analysis\n• Portfolio impact calculate\n• Clear buy/sell recommendations\n\nKaunsa stock analyse karein aaj?`,
     }[language]
   } else if (isPortfolio) {
     verdict = {
@@ -309,9 +309,9 @@ async function* runDemoFallback(query: string, portfolio: Holding[], language: L
     const priceLinesHgl = hasPrice ? `\n\nEntry Zone: ₹${entry}\nStop Loss: ₹${sl}\nTarget: ₹${tgt} (3-4 months)` : ''
     const notListedNote = !hasPrice ? `\n\nNote: ${tkr} may not be listed on NSE/BSE or may be a recently listed stock. Verify the ticker symbol and check with your broker.` : ''
     verdict = {
-      en: `${tkr} shows strong momentum with insider accumulation signals. RSI at 58 — healthy, not overbought. Q3 results confirmed ${growth} profit growth with a debt-free balance sheet. Volume running at 3.2x average, suggesting institutional interest.\n\nACTION: ${action}${priceLinesEn}\nNivesh Score: ${score}/100${notListedNote}\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance Live`,
+      en: `${tkr} shows strong momentum with insider accumulation signals. RSI at 58 — healthy, not overbought. Q3 results confirmed ${growth} profit growth with a debt-free balance sheet. Volume running at 3.2x average, suggesting institutional interest.\n\nACTION: ${action}${priceLinesEn}\nNivesh Score: ${score}/100${notListedNote}\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance quote feed`,
       hi: `${tkr} में मजबूत गति है। RSI 58 — overbought नहीं। Q3 नतीजों में ${growth} मुनाफा वृद्धि। वॉल्यूम औसत से 3.2 गुना — संस्थागत रुचि दिख रही है।\n\nACTION: ${action}${priceLinesHi}\nनिवेश स्कोर: ${score}/100\n\nस्रोत: NSE Insider Filing, Q3FY25 Results, Yahoo Finance`,
-      hinglish: `${tkr} mein strong momentum hai — insider accumulation signals aa rahe hain. RSI 58 — not overbought. Q3 results mein ${growth} profit growth confirm hua, debt-free balance sheet ke saath. Volume 3.2x average — institutional interest dikh raha hai.\n\nACTION: ${action}${priceLinesHgl}\nNivesh Score: ${score}/100\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance Live`,
+      hinglish: `${tkr} mein strong momentum hai — insider accumulation signals aa rahe hain. RSI 58 — not overbought. Q3 results mein ${growth} profit growth confirm hua, debt-free balance sheet ke saath. Volume 3.2x average — institutional interest dikh raha hai.\n\nACTION: ${action}${priceLinesHgl}\nNivesh Score: ${score}/100\n\nSources: NSE Insider Filing, Q3FY25 Results, Yahoo Finance quote feed`,
     }[language]
   } else {
     verdict = {

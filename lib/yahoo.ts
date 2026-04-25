@@ -1,4 +1,5 @@
 import type { StockPrice, OHLCV, Technicals, Fundamentals } from '@/types'
+import { makeSourceMeta } from '@/lib/data-source'
 
 // Ensure .NS suffix for NSE stocks
 function toNSETicker(ticker: string): string {
@@ -91,6 +92,7 @@ export async function getStockPrice(ticker: string): Promise<StockPrice> {
       avg_volume_30d: q.averageDailyVolume3Month ?? q.averageDailyVolume10Day ?? 1,
       volume_ratio: (q.regularMarketVolume ?? 0) / Math.max(q.averageDailyVolume3Month ?? 1, 1),
       timestamp: Date.now(),
+      source: makeSourceMeta('live', Date.now(), 'Fetched from Yahoo Finance quote endpoint'),
     }
   } catch {
     return getFallbackPrice(ticker)
@@ -123,6 +125,7 @@ function getFallbackPrice(ticker: string): StockPrice {
     avg_volume_30d: 2_000_000,
     volume_ratio: 1 + (seed % 200) / 100,
     timestamp: Date.now(),
+    source: makeSourceMeta('fallback', Date.now(), 'Reference quote used because live market data was unavailable'),
   }
 }
 

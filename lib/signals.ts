@@ -53,6 +53,7 @@ export function generateAutoSignals(isDemoMode: boolean): Signal[] {
     ...s,
     timestamp: Date.now() - Math.random() * 60 * 60 * 1000,
     is_new: Math.random() > 0.7,
+    source_state: 'reference',
   }))
 }
 

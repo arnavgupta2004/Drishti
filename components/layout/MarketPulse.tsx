@@ -2,6 +2,8 @@
 import { useAppStore } from '@/store/useAppStore'
 import { useMarketData } from '@/hooks/useMarketData'
 import { Wallet } from 'lucide-react'
+import SourceBadge from '@/components/shared/SourceBadge'
+import { formatSourceTime } from '@/lib/data-source'
 import type { MarketPulseData } from '@/types'
 
 // ─── Build ticker items from market pulse data ────────────────────────────────
@@ -198,21 +200,14 @@ export default function MarketPulse() {
 
       {/* ── RIGHT: Controls ──────────────────────────────────── */}
       <div className="flex items-center gap-2 px-4 h-full shrink-0">
-        {/* Live pulse indicator */}
-        <div className="flex items-center gap-1.5 mr-1">
-          <div
-            className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: isDemoMode ? '#FFB800' : '#00D4AA' }}
-          />
-          <span
-            className="text-[11px] font-bold tracking-wider"
-            style={{ color: isDemoMode ? '#FFB800' : '#00D4AA' }}
-          >
-            {isDemoMode ? 'DEMO' : 'LIVE'}
+        <div className="flex flex-col items-end mr-1 leading-none">
+          {marketPulse?.source ? <SourceBadge source={marketPulse.source} compact /> : null}
+          <span className="text-[10px] mt-1" style={{ color: '#4A5568' }}>
+            {marketPulse?.source?.as_of ? `As of ${formatSourceTime(marketPulse.source.as_of)}` : 'Waiting for market feed'}
           </span>
         </div>
 
-        {/* Demo / Live toggle */}
+        {/* Demo / Market feed toggle */}
         <button
           onClick={() => setDemoMode(!isDemoMode)}
           className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
@@ -224,7 +219,7 @@ export default function MarketPulse() {
           onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
-          {isDemoMode ? 'Go Live' : 'Go Demo'}
+          {isDemoMode ? 'Use Market Feed' : 'Use Demo'}
         </button>
 
         {/* Video Engine button */}

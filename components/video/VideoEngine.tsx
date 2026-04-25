@@ -239,7 +239,7 @@ export default function VideoEngine({ onClose }: { onClose: () => void }) {
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#FF4560' }} />
               <span className="text-[10px] font-bold" style={{ color: '#FF4560' }}>
-                LIVE — Auto every 60s
+                AUTO REFRESH — every 60s
               </span>
               {secondsAgo !== null && (
                 <span className="text-[9px]" style={{ color: '#4A5568' }}>
@@ -259,7 +259,7 @@ export default function VideoEngine({ onClose }: { onClose: () => void }) {
               color: autoMode ? '#FF4560' : '#3B8BEB',
             }}
           >
-            {autoMode ? '\u23F9 Stop Auto' : '\uD83D\uDD34 Auto Mode'}
+            {autoMode ? '\u23F9 Stop Auto' : '\uD83D\uDD34 Auto Refresh'}
           </button>
 
           <button

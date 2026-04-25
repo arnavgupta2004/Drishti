@@ -1,7 +1,7 @@
 'use client'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Signal, ChatMessage, Holding, MarketPulseData, AgentStep } from '@/types'
+import type { Signal, ChatMessage, Holding, MarketPulseData, AgentStep, DataSourceMeta } from '@/types'
 import { DEMO_HOLDINGS } from '@/lib/portfolio'
 
 interface AppState {
@@ -19,7 +19,8 @@ interface AppState {
 
   // Signals
   signals: Signal[]
-  setSignals: (s: Signal[]) => void
+  signalsMeta: DataSourceMeta | null
+  setSignals: (s: Signal[], meta?: DataSourceMeta | null) => void
   addSignal: (s: Signal) => void
 
   // Active stock / chart
@@ -73,7 +74,8 @@ export const useAppStore = create<AppState>()(
       setMarketPulse: (d) => set({ marketPulse: d }),
 
       signals: [],
-      setSignals: (s) => set({ signals: s }),
+      signalsMeta: null,
+      setSignals: (s, meta = null) => set({ signals: s, signalsMeta: meta }),
       addSignal: (s) => set((state) => ({
         signals: [{ ...s, is_new: true }, ...state.signals.slice(0, 11)],
       })),

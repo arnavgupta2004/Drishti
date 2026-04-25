@@ -63,6 +63,7 @@ export async function getBulkDeals(): Promise<BulkDeal[]> {
       quantity: Number(d.quantity || d.QUANTITY_TRADED || 0),
       price: Number(d.tradePrice || d.TRADE_PRICE || 0),
       date: String(d.mktType || d.TRADE_DATE || new Date().toISOString().split('T')[0]),
+      source_state: 'live',
     }))
   } catch {
     return getFallbackBulkDeals()
@@ -71,11 +72,11 @@ export async function getBulkDeals(): Promise<BulkDeal[]> {
 
 function getFallbackBulkDeals(): BulkDeal[] {
   return [
-    { symbol: 'TITAN',      clientName: 'Tata Sons Pvt Ltd',     dealType: 'BUY',  quantity: 230000,  price: 3462,  date: new Date().toISOString().split('T')[0] },
-    { symbol: 'TCS',        clientName: 'Life Insurance Corp',   dealType: 'BUY',  quantity: 800000,  price: 3842,  date: new Date().toISOString().split('T')[0] },
-    { symbol: 'INFY',       clientName: 'HDFC AMC',              dealType: 'BUY',  quantity: 500000,  price: 1876,  date: new Date().toISOString().split('T')[0] },
-    { symbol: 'ZOMATO',     clientName: 'Mirae Asset MF',        dealType: 'BUY',  quantity: 2500000, price: 218,   date: new Date().toISOString().split('T')[0] },
-    { symbol: 'BAJFINANCE', clientName: 'Axis MF',               dealType: 'SELL', quantity: 120000,  price: 6240,  date: new Date().toISOString().split('T')[0] },
+    { symbol: 'TITAN',      clientName: 'Tata Sons Pvt Ltd',     dealType: 'BUY',  quantity: 230000,  price: 3462,  date: new Date().toISOString().split('T')[0], source_state: 'fallback' },
+    { symbol: 'TCS',        clientName: 'Life Insurance Corp',   dealType: 'BUY',  quantity: 800000,  price: 3842,  date: new Date().toISOString().split('T')[0], source_state: 'fallback' },
+    { symbol: 'INFY',       clientName: 'HDFC AMC',              dealType: 'BUY',  quantity: 500000,  price: 1876,  date: new Date().toISOString().split('T')[0], source_state: 'fallback' },
+    { symbol: 'ZOMATO',     clientName: 'Mirae Asset MF',        dealType: 'BUY',  quantity: 2500000, price: 218,   date: new Date().toISOString().split('T')[0], source_state: 'fallback' },
+    { symbol: 'BAJFINANCE', clientName: 'Axis MF',               dealType: 'SELL', quantity: 120000,  price: 6240,  date: new Date().toISOString().split('T')[0], source_state: 'fallback' },
   ]
 }
 
@@ -94,6 +95,7 @@ export async function getFIIDII(): Promise<FIIDIIData> {
       dii_buy: 0,
       dii_sell: 0,
       dii_net: DEMO_MARKET_PULSE.dii_net,
+      source_state: 'live',
     }
   } catch {
     return getFallbackFIIDII()
@@ -109,6 +111,7 @@ function getFallbackFIIDII(): FIIDIIData {
     dii_buy: 7480,
     dii_sell: 8100,
     dii_net: -620,
+    source_state: 'fallback',
   }
 }
 

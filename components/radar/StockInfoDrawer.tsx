@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, TrendingUp, TrendingDown, BarChart2, Sparkles, Loader2 } from 'lucide-react'
 import type { Signal, Technicals, Fundamentals, QuarterlyResult, StockPrice } from '@/types'
 import { useAppStore } from '@/store/useAppStore'
+import SourceBadge from '@/components/shared/SourceBadge'
+import { formatSourceTime } from '@/lib/data-source'
 
 interface StockData {
   price: StockPrice
@@ -175,6 +177,15 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                 {fund.sector}
               </span>
             )}
+            {data?.price?.source ? (
+              <div className="flex items-center gap-2 flex-wrap mt-2">
+                <SourceBadge source={data.price.source} compact />
+                <span className="text-[12px] text-[#4A5568]">As of {formatSourceTime(data.price.source.as_of)}</span>
+              </div>
+            ) : null}
+            {data?.price?.source?.note ? (
+              <div className="text-[12px] text-[#4A5568] mt-1">{data.price.source.note}</div>
+            ) : null}
           </div>
 
           {/* Scrollable body */}
@@ -182,7 +193,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
             {loading ? (
               <div className="flex flex-col items-center justify-center h-40 gap-3">
                 <Loader2 size={18} className="animate-spin" style={{ color: '#3B8BEB' }} />
-                <span className="text-[14px] text-[#4A5568]">Fetching live data...</span>
+                <span className="text-[14px] text-[#4A5568]">Fetching latest available data...</span>
               </div>
             ) : (
               <>

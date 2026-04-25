@@ -1,5 +1,14 @@
 // ─── Market Data ─────────────────────────────────────────────────────────────
 
+export type DataSourceState = 'live' | 'cached' | 'fallback' | 'demo' | 'reference'
+
+export interface DataSourceMeta {
+  state: DataSourceState
+  label: string
+  as_of: number
+  note?: string
+}
+
 export interface StockPrice {
   ticker: string
   price: number
@@ -9,6 +18,7 @@ export interface StockPrice {
   avg_volume_30d: number
   volume_ratio: number
   timestamp: number
+  source: DataSourceMeta
 }
 
 export interface OHLCV {
@@ -69,6 +79,7 @@ export interface BulkDeal {
   quantity: number
   price: number
   date: string
+  source_state?: DataSourceState
 }
 
 export interface FIIDIIData {
@@ -79,6 +90,7 @@ export interface FIIDIIData {
   dii_buy: number
   dii_sell: number
   dii_net: number
+  source_state?: DataSourceState
 }
 
 // ─── Signals ─────────────────────────────────────────────────────────────────
@@ -110,6 +122,7 @@ export interface Signal {
   timestamp: number
   raw_data?: Record<string, unknown>
   is_new?: boolean
+  source_state?: DataSourceState
   // Groq-enriched fields
   groq_sentiment?: 'bullish' | 'bearish' | 'neutral'
   groq_reason?: string
@@ -222,6 +235,7 @@ export interface MarketPulseData {
   gainers: { ticker: string; company: string; change_pct: number }[]
   losers: { ticker: string; company: string; change_pct: number }[]
   timestamp: number
+  source: DataSourceMeta
 }
 
 // ─── SSE Events ──────────────────────────────────────────────────────────────

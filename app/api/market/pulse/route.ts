@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getStockPrice } from '@/lib/yahoo'
 import { getFIIDII } from '@/lib/nse'
 import { DEMO_MARKET_PULSE } from '@/lib/demo-data'
+import { makeSourceMeta } from '@/lib/data-source'
 import type { MarketPulseData, IndexData } from '@/types'
 
 export const runtime = 'nodejs'
@@ -25,10 +26,20 @@ const TTL = 30 * 1000 // 30 seconds
 
 export async function GET(req: NextRequest) {
   const isDemoMode = req.nextUrl.searchParams.get('demo') === 'true'
-  if (isDemoMode) return NextResponse.json(DEMO_MARKET_PULSE)
+  if (isDemoMode) {
+    return NextResponse.json({
+      ...DEMO_MARKET_PULSE,
+      source: makeSourceMeta('demo', Date.now(), 'Presentation dataset enabled from the demo toggle'),
+    })
+  }
 
   const now = Date.now()
-  if (cache && now - cacheTime < TTL) return NextResponse.json(cache)
+  if (cache && now - cacheTime < TTL) {
+    return NextResponse.json({
+      ...cache,
+      source: makeSourceMeta('cached', cache.source.as_of, cache.source.note, 'Cached'),
+    })
+  }
 
   try {
     const [indicesData, fiidii, moversData] = await Promise.all([
@@ -36,6 +47,10 @@ export async function GET(req: NextRequest) {
       getFIIDII().catch(() => null),
       Promise.all(MOVER_TICKERS.map((t) => getStockPrice(t).catch(() => null))),
     ])
+
+    const hadIndexFallback = indicesData.some((d) => !d || d.source.state !== 'live')
+    const hadMoverFallback = moversData.some((m) => !m || m.source.state !== 'live')
+    const hadFiiFallback = !fiidii || fiidii.source_state !== 'live'
 
     const indices: IndexData[] = indicesData.map((d, i) => {
       const def = INDEX_TICKERS[i]
@@ -58,10 +73,20 @@ export async function GET(req: NextRequest) {
       gainers: gainers.length ? gainers : DEMO_MARKET_PULSE.gainers,
       losers: losers.length ? losers : DEMO_MARKET_PULSE.losers,
       timestamp: now,
+      source: makeSourceMeta(
+        hadIndexFallback || hadMoverFallback || hadFiiFallback ? 'fallback' : 'live',
+        now,
+        hadIndexFallback || hadMoverFallback || hadFiiFallback
+          ? 'Latest available market pulse. One or more segments are using reference values because public feeds were unavailable.'
+          : 'Fetched from public market feeds.',
+      ),
     }
     cacheTime = now
     return NextResponse.json(cache)
   } catch {
-    return NextResponse.json(DEMO_MARKET_PULSE)
+    return NextResponse.json({
+      ...DEMO_MARKET_PULSE,
+      source: makeSourceMeta('fallback', Date.now(), 'Reference market pulse used because public feeds were unavailable'),
+    })
   }
 }

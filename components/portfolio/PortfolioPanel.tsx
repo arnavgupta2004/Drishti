@@ -154,6 +154,9 @@ export default function PortfolioPanel() {
 
         {/* P&L Summary */}
         <div className="px-4 py-3 border-b border-border bg-bg-tertiary shrink-0">
+          <div className="text-[11px] uppercase tracking-wider text-[#4A5568] mb-2">
+            Holdings refresh every 5 min using the latest available quote endpoint
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="text-[16px] text-text-secondary uppercase">Invested</div>
