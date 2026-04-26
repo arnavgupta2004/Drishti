@@ -19,6 +19,7 @@ interface AppState {
 
   // Signals
   signals: Signal[]
+  previousSignals: Signal[]
   signalsMeta: DataSourceMeta | null
   setSignals: (s: Signal[], meta?: DataSourceMeta | null) => void
   addSignal: (s: Signal) => void
@@ -74,8 +75,9 @@ export const useAppStore = create<AppState>()(
       setMarketPulse: (d) => set({ marketPulse: d }),
 
       signals: [],
+      previousSignals: [],
       signalsMeta: null,
-      setSignals: (s, meta = null) => set({ signals: s, signalsMeta: meta }),
+      setSignals: (s, meta = null) => set((state) => ({ previousSignals: state.signals, signals: s, signalsMeta: meta })),
       addSignal: (s) => set((state) => ({
         signals: [{ ...s, is_new: true }, ...state.signals.slice(0, 11)],
       })),

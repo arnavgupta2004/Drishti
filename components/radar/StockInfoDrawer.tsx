@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/useAppStore'
 import SourceBadge from '@/components/shared/SourceBadge'
 import { formatSourceTime } from '@/lib/data-source'
 import { buildInvestmentCase } from '@/lib/investment-case'
+import { buildPortfolioImpact, buildSourceProvenance } from '@/lib/signal-insights'
 
 interface StockData {
   price: StockPrice
@@ -86,7 +87,7 @@ function BulletList({ items, tone }: { items: string[]; tone: 'bull' | 'risk' | 
 }
 
 export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
-  const { setActiveStock } = useAppStore()
+  const { setActiveStock, holdings } = useAppStore()
   const [data, setData] = useState<StockData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -117,6 +118,8 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
 
   const isUp = price.change_pct >= 0
   const investmentCase = buildInvestmentCase(signal, data?.price ?? null, tech, fund)
+  const provenance = buildSourceProvenance(signal, data?.price ?? null)
+  const portfolioImpact = buildPortfolioImpact(holdings, signal, data?.price ?? null, fund)
 
   // RSI status label
   const rsiStatus = tech
@@ -262,6 +265,15 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                   </div>
                 )}
 
+                {signal.what_changed && signal.what_changed.length > 0 && (
+                  <div>
+                    <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">What Changed</div>
+                    <div className="px-3 py-3 rounded-xl" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
+                      <BulletList items={signal.what_changed} tone="watch" />
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568]">Confidence & Evidence</div>
@@ -289,6 +301,20 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                       <div className="text-[12px] font-bold uppercase tracking-wider text-[#3B8BEB] mb-2">What To Watch Next</div>
                       <BulletList items={investmentCase.watchlist} tone="watch" />
                     </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Source Provenance</div>
+                  <div className="px-3 py-3 rounded-xl" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
+                    <BulletList items={provenance} tone="watch" />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568] mb-1.5">Portfolio Impact Simulator</div>
+                  <div className="px-3 py-3 rounded-xl" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
+                    <BulletList items={portfolioImpact} tone="bull" />
                   </div>
                 </div>
 

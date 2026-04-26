@@ -127,6 +127,7 @@ export interface Signal {
   groq_sentiment?: 'bullish' | 'bearish' | 'neutral'
   groq_reason?: string
   groq_confidence?: number
+  what_changed?: string[]
 }
 
 // ─── Patterns ────────────────────────────────────────────────────────────────
