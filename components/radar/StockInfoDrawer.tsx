@@ -6,6 +6,7 @@ import type { Signal, Technicals, Fundamentals, QuarterlyResult, StockPrice } fr
 import { useAppStore } from '@/store/useAppStore'
 import SourceBadge from '@/components/shared/SourceBadge'
 import { formatSourceTime } from '@/lib/data-source'
+import { buildInvestmentCase } from '@/lib/investment-case'
 
 interface StockData {
   price: StockPrice
@@ -63,6 +64,27 @@ function QuarterBar({ q }: { q: QuarterlyResult }) {
   )
 }
 
+function BulletList({ items, tone }: { items: string[]; tone: 'bull' | 'risk' | 'watch' }) {
+  const colors = tone === 'bull'
+    ? { dot: '#00D4AA', text: '#C9FCEB' }
+    : tone === 'risk'
+    ? { dot: '#FF8A65', text: '#FFD7CC' }
+    : { dot: '#3B8BEB', text: '#D4E6FF' }
+
+  return (
+    <div className="space-y-2">
+      {items.map((item) => (
+        <div key={item} className="flex items-start gap-2.5">
+          <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: colors.dot }} />
+          <div className="text-[13px] leading-relaxed" style={{ color: colors.text }}>
+            {item}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
   const { setActiveStock } = useAppStore()
   const [data, setData] = useState<StockData | null>(null)
@@ -94,6 +116,7 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
   const quarterly = data?.quarterly ?? []
 
   const isUp = price.change_pct >= 0
+  const investmentCase = buildInvestmentCase(signal, data?.price ?? null, tech, fund)
 
   // RSI status label
   const rsiStatus = tech
@@ -238,6 +261,36 @@ export default function StockInfoDrawer({ signal, onClose, onAnalyse }: Props) {
                     </div>
                   </div>
                 )}
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="text-[15px] font-bold uppercase tracking-wider text-[#4A5568]">Confidence & Evidence</div>
+                    <div
+                      className="px-2.5 py-1 rounded-full text-[12px] font-bold"
+                      style={{
+                        background: investmentCase.confidence >= 75 ? 'rgba(0,212,170,0.12)' : investmentCase.confidence >= 58 ? 'rgba(59,139,235,0.12)' : 'rgba(255,138,101,0.12)',
+                        color: investmentCase.confidence >= 75 ? '#00D4AA' : investmentCase.confidence >= 58 ? '#3B8BEB' : '#FF8A65',
+                        border: `1px solid ${investmentCase.confidence >= 75 ? 'rgba(0,212,170,0.24)' : investmentCase.confidence >= 58 ? 'rgba(59,139,235,0.24)' : 'rgba(255,138,101,0.24)'}`,
+                      }}
+                    >
+                      {investmentCase.confidenceLabel} Confidence · {investmentCase.confidence}/100
+                    </div>
+                  </div>
+                  <div className="space-y-2.5">
+                    <div className="px-3 py-3 rounded-xl" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
+                      <div className="text-[12px] font-bold uppercase tracking-wider text-[#00D4AA] mb-2">Bull Case</div>
+                      <BulletList items={investmentCase.thesis} tone="bull" />
+                    </div>
+                    <div className="px-3 py-3 rounded-xl" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
+                      <div className="text-[12px] font-bold uppercase tracking-wider text-[#FF8A65] mb-2">Key Risks</div>
+                      <BulletList items={investmentCase.risks} tone="risk" />
+                    </div>
+                    <div className="px-3 py-3 rounded-xl" style={{ background: '#0D1421', border: '1px solid #1C2840' }}>
+                      <div className="text-[12px] font-bold uppercase tracking-wider text-[#3B8BEB] mb-2">What To Watch Next</div>
+                      <BulletList items={investmentCase.watchlist} tone="watch" />
+                    </div>
+                  </div>
+                </div>
 
                 {/* Fundamentals */}
                 {fund && (

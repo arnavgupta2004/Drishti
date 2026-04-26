@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -14,7 +14,7 @@
   --color-text-secondary:#8B95A8;
   --color-border:        #1C2840;
 
-  --font-family-sans: 'Inter', sans-serif;
+  --font-family-sans: 'Manrope', sans-serif;
   --font-family-mono: 'JetBrains Mono', monospace;
 
   @keyframes pulseGreen {
@@ -58,7 +58,7 @@
 html, body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: 'Manrope', -apple-system, sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   overflow: hidden;
   height: 100vh;
@@ -74,10 +74,10 @@ body {
 }
 
 /* ─── Scrollbar ───────────────────────────────────────────── */
-.scrollbar-thin::-webkit-scrollbar        { width: 2px; }
+.scrollbar-thin::-webkit-scrollbar        { width: 6px; height: 6px; }
 .scrollbar-thin::-webkit-scrollbar-track  { background: transparent; }
-.scrollbar-thin::-webkit-scrollbar-thumb  { background: #1C2840; border-radius: 2px; }
-.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #3B4560; }
+.scrollbar-thin::-webkit-scrollbar-thumb  { background: rgba(59, 72, 101, 0.65); border-radius: 999px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(79, 98, 135, 0.85); }
 
 /* ─── Fonts ───────────────────────────────────────────────── */
 .font-mono { font-family: 'JetBrains Mono', monospace; }
@@ -119,6 +119,27 @@ body {
 /* ─── Card shadow presets ─────────────────────────────────── */
 .shadow-card  { box-shadow: 0 4px 20px rgba(0,0,0,0.4),  0 1px 0 rgba(255,255,255,0.02); }
 .shadow-float { box-shadow: 0 8px 36px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.03); }
+
+.panel-shell {
+  background:
+    linear-gradient(180deg, rgba(18, 27, 44, 0.96) 0%, rgba(10, 16, 30, 0.98) 100%);
+  border: 1px solid rgba(37, 55, 86, 0.9);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+.premium-card {
+  background: linear-gradient(180deg, rgba(18, 25, 40, 0.98) 0%, rgba(12, 18, 31, 0.98) 100%);
+  border: 1px solid rgba(38, 56, 85, 0.92);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+.section-eyebrow {
+  color: #7F8AA3;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
 
 /* ─── Animation utilities ─────────────────────────────────── */
 .animate-pulse-green { animation: pulseGreen 1.5s ease-in-out 3; }

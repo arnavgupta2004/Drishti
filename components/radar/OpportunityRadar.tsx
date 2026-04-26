@@ -20,14 +20,14 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
   useSignals()
 
   return (
-    <div className="flex flex-col h-full" style={{ background: '#070B14' }}>
+    <div className="flex flex-col h-full" style={{ background: 'transparent' }}>
       {/* Header */}
       <div
-        className="flex items-center justify-between px-3 shrink-0"
-        style={{ height: 44, borderBottom: '1px solid #1C2840' }}
+        className="flex items-center justify-between px-4 shrink-0"
+        style={{ height: 54, borderBottom: '1px solid rgba(37,55,86,0.9)' }}
       >
         {/* Title */}
-        <span className="text-[12px] font-bold text-[#8B95A8] uppercase tracking-wide">
+        <span className="text-[11px] font-extrabold text-[#8B95A8] uppercase tracking-[0.16em]">
           Opportunity Radar
         </span>
 
@@ -46,7 +46,7 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
       </div>
 
       {/* Signal feed */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="flex-1 overflow-y-auto px-3.5 py-3.5 scrollbar-thin" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <AnimatePresence>
           {signals.length === 0 ? (
             <motion.div
@@ -72,8 +72,8 @@ export default function OpportunityRadar({ onAnalyseSignal }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 shrink-0" style={{ borderTop: '1px solid #1C2840' }}>
-        <p className="text-[15px] text-[#4A5568] text-center tracking-wide">
+      <div className="px-4 py-3 shrink-0" style={{ borderTop: '1px solid rgba(37,55,86,0.9)' }}>
+        <p className="text-[12px] text-[#62708B] text-center tracking-wide leading-relaxed">
           {signalsMeta?.as_of
             ? `${signalsMeta.label} radar · refreshed ${formatSourceTime(signalsMeta.as_of)}`
             : 'Tap a signal to view company details'}

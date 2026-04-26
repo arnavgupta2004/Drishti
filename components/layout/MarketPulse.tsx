@@ -199,10 +199,10 @@ export default function MarketPulse() {
       </div>
 
       {/* ── RIGHT: Controls ──────────────────────────────────── */}
-      <div className="flex items-center gap-2 px-4 h-full shrink-0">
-        <div className="flex flex-col items-end mr-1 leading-none">
+      <div className="flex items-center gap-1 px-2 h-full shrink-0">
+        <div className="flex flex-col items-end mr-0.5 leading-none min-w-0">
           {marketPulse?.source ? <SourceBadge source={marketPulse.source} compact /> : null}
-          <span className="text-[10px] mt-1" style={{ color: '#4A5568' }}>
+          <span className="text-[8px] mt-1 whitespace-nowrap" style={{ color: '#4A5568' }}>
             {marketPulse?.source?.as_of ? `As of ${formatSourceTime(marketPulse.source.as_of)}` : 'Waiting for market feed'}
           </span>
         </div>
@@ -210,7 +210,7 @@ export default function MarketPulse() {
         {/* Demo / Market feed toggle */}
         <button
           onClick={() => setDemoMode(!isDemoMode)}
-          className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          className="flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-full transition-all duration-200 whitespace-nowrap"
           style={{
             background: isDemoMode ? 'rgba(255,184,0,0.08)' : 'rgba(0,212,170,0.08)',
             border: `1px solid ${isDemoMode ? 'rgba(255,184,0,0.25)' : 'rgba(0,212,170,0.25)'}`,
@@ -219,13 +219,13 @@ export default function MarketPulse() {
           onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
-          {isDemoMode ? 'Use Market Feed' : 'Use Demo'}
+          {isDemoMode ? 'Market Feed' : 'Use Demo'}
         </button>
 
         {/* Video Engine button */}
         <button
           onClick={() => setVideoEngineOpen(!videoEngineOpen)}
-          className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          className="flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-full transition-all duration-200 whitespace-nowrap"
           style={{
             background: videoEngineOpen ? 'rgba(59,139,235,0.15)' : 'rgba(59,139,235,0.07)',
             border: '1px solid rgba(59,139,235,0.25)',
@@ -234,13 +234,13 @@ export default function MarketPulse() {
           onMouseEnter={e => (e.currentTarget.style.background = 'rgba(59,139,235,0.15)')}
           onMouseLeave={e => (e.currentTarget.style.background = videoEngineOpen ? 'rgba(59,139,235,0.15)' : 'rgba(59,139,235,0.07)')}
         >
-          🎬 Video
+          Video
         </button>
 
         {/* Portfolio button */}
         <button
           onClick={() => setPortfolioOpen(!portfolioOpen)}
-          className="flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full transition-all duration-200"
+          className="flex items-center gap-1 text-[10px] font-bold px-2 py-1.5 rounded-full transition-all duration-200 whitespace-nowrap"
           style={{
             background: portfolioOpen ? 'rgba(255,184,0,0.15)' : 'rgba(255,184,0,0.07)',
             border: '1px solid rgba(255,184,0,0.25)',

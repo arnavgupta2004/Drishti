@@ -41,10 +41,10 @@ export default function AgentMessage({ message }: { message: ChatMessage }) {
         className="flex justify-end"
       >
         <div
-          className="max-w-[85%] rounded-2xl rounded-tr-sm px-3.5 py-2.5"
+          className="max-w-[85%] rounded-2xl rounded-tr-sm px-4 py-3 premium-card"
           style={{ background: 'rgba(59,139,235,0.12)', border: '1px solid rgba(59,139,235,0.2)' }}
         >
-          <p className="text-[#E8EDF5] text-[13px] leading-relaxed">{message.content}</p>
+          <p className="text-[#E8EDF5] text-[13px] leading-[1.75]">{message.content}</p>
         </div>
       </motion.div>
     )
@@ -84,8 +84,7 @@ export default function AgentMessage({ message }: { message: ChatMessage }) {
       {/* Thinking chain */}
       {message.steps && message.steps.length > 0 && (
         <div
-          className="rounded-xl px-3.5 py-3"
-          style={{ background: '#0D1421', border: '1px solid #1C2840' }}
+          className="premium-card rounded-[18px] px-4 py-3.5"
         >
           {/* Routing trail */}
           {message.routing && message.routing.length > 0 && (
@@ -112,7 +111,7 @@ export default function AgentMessage({ message }: { message: ChatMessage }) {
       {/* Verdict */}
       {message.content && (
         <div
-          className="rounded-xl rounded-tl-sm px-4 py-3.5"
+          className="rounded-[20px] rounded-tl-sm px-4 py-4 premium-card"
           style={{
             background: '#0F1928',
             border: '1px solid #1C2840',

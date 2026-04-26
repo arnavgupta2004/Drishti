@@ -166,17 +166,17 @@ export default function DrishtiAgent() {
   const langs: Array<'en' | 'hi' | 'hinglish'> = ['en', 'hi', 'hinglish']
 
   return (
-    <div className="flex flex-col h-full" style={{ background: '#070B14' }}>
+    <div className="flex flex-col h-full" style={{ background: 'transparent' }}>
       {/* Header */}
       <div
         className="flex items-center justify-between px-4 shrink-0"
-        style={{ height: 44, borderBottom: '1px solid #1C2840' }}
+        style={{ height: 54, borderBottom: '1px solid rgba(37,55,86,0.9)' }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <Bot size={12} className="text-[#FFB800]" />
-          <span className="text-[14px] font-bold text-[#8B95A8] uppercase tracking-[0.14em]">Drishti Agent</span>
+          <span className="text-[10px] font-extrabold text-[#8B95A8] uppercase tracking-[0.14em] whitespace-nowrap">Drishti Agent</span>
           <span
-            className="text-[15px] font-bold px-1.5 py-0.5 rounded-full"
+            className="text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap"
             style={{ background: 'rgba(255,184,0,0.08)', color: '#FFB800', border: '1px solid rgba(255,184,0,0.15)' }}
           >
             4-AGENT AI
@@ -197,42 +197,44 @@ export default function DrishtiAgent() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin">
         {messages.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col items-center justify-center h-full gap-4 text-center px-2"
+            className="flex flex-col items-center justify-center h-full gap-5 text-center px-4"
           >
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(255,184,0,0.07)', border: '1px solid rgba(255,184,0,0.12)' }}
+              className="w-14 h-14 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(255,184,0,0.07)', border: '1px solid rgba(255,184,0,0.12)', boxShadow: '0 10px 24px rgba(0,0,0,0.2)' }}
             >
-              <Sparkles size={16} className="text-[#FFB800]" />
+              <Sparkles size={18} className="text-[#FFB800]" />
             </div>
             <div>
-              <p className="text-[#E8EDF5] text-[16px] font-semibold mb-1">Namaskar! Main DRISHTI hoon 🇮🇳</p>
-              <p className="text-[#8B95A8] text-[14px] leading-relaxed">
-                Your personal hedge fund AI.<br />
+              <p className="text-[#F2F6FB] text-[22px] leading-[1.25] font-extrabold mb-2 tracking-tight max-w-[260px] mx-auto text-balance">
+                Namaskar! Main DRISHTI hoon 🇮🇳
+              </p>
+              <p className="text-[#94A1BA] text-[14px] leading-relaxed max-w-[250px] mx-auto">
+                Your personal hedge fund AI.
+                <br />
                 Ask about any NSE/BSE stock.
               </p>
             </div>
-            <div className="w-full space-y-1.5">
-              <p className="text-[15px] text-[#4A5568] uppercase tracking-wider mb-2">Quick queries</p>
+            <div className="w-full space-y-2">
+              <p className="section-eyebrow mb-1">Quick queries</p>
               {QUICK_QUERIES[language].map(q => (
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
-                  className="w-full text-left text-[15px] text-[#8B95A8] hover:text-[#E8EDF5] rounded-lg px-3 py-2 transition-all duration-200"
-                  style={{ background: '#0D1421', border: '1px solid #1C2840' }}
+                  className="w-full text-left text-[12px] leading-[1.4] text-[#A8B4C9] hover:text-[#E8EDF5] rounded-[16px] px-3.5 py-2.5 transition-all duration-200 premium-card break-words"
                   onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.background = '#141E30'
+                    ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
                     ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(59,139,235,0.25)'
                   }}
                   onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.background = '#0D1421'
-                    ;(e.currentTarget as HTMLElement).style.borderColor = '#1C2840'
+                    ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+                    ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(38,56,85,0.92)'
                   }}
                 >
                   {q}
@@ -249,18 +251,18 @@ export default function DrishtiAgent() {
       </div>
 
       {/* Input */}
-      <div className="px-3 pt-2.5 pb-3 shrink-0" style={{ borderTop: '1px solid #1C2840' }}>
+      <div className="px-4 pt-3 pb-4 shrink-0" style={{ borderTop: '1px solid rgba(37,55,86,0.9)' }}>
         {/* Language selector — full width, clearly visible */}
-        <div className="flex items-center gap-1.5 mb-2.5">
-          <span className="text-[16px] text-[#4A5568] font-semibold tracking-wider uppercase shrink-0">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-[11px] text-[#65748E] font-bold tracking-[0.16em] uppercase shrink-0">
             Lang:
           </span>
-          <div className="flex items-center gap-1 flex-1">
+          <div className="flex items-center gap-1 flex-1 min-w-0">
             {langs.map(l => (
               <button
                 key={l}
                 onClick={() => setLanguage(l)}
-                className="flex-1 py-1 rounded-lg text-[14px] font-semibold transition-all duration-200"
+                className="flex-1 py-2 rounded-full text-[10px] font-semibold transition-all duration-200 min-w-0 whitespace-nowrap"
                 style={{
                   background: language === l ? '#3B8BEB' : '#0D1421',
                   color:      language === l ? '#fff'    : '#8B95A8',
@@ -276,9 +278,9 @@ export default function DrishtiAgent() {
 
         <div
           className="flex items-center gap-2 px-3.5 py-2.5 rounded-full"
-          style={{ background: '#0D1421', border: '1px solid #1C2840', transition: 'border-color 200ms' }}
+          style={{ background: '#0D1421', border: '1px solid rgba(38,56,85,0.92)', transition: 'border-color 200ms' }}
           onFocusCapture={e => (e.currentTarget.style.borderColor = 'rgba(59,139,235,0.4)')}
-          onBlurCapture={e => (e.currentTarget.style.borderColor = '#1C2840')}
+          onBlurCapture={e => (e.currentTarget.style.borderColor = 'rgba(38,56,85,0.92)')}
         >
           <input
             value={input}
@@ -286,7 +288,7 @@ export default function DrishtiAgent() {
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
             placeholder={PLACEHOLDERS[language]}
             disabled={isAgentRunning}
-            className="flex-1 bg-transparent text-[16px] text-[#E8EDF5] placeholder-[#4A5568] outline-none disabled:opacity-40 min-w-0"
+            className="flex-1 bg-transparent text-[13px] text-[#E8EDF5] placeholder-[#5E6C86] outline-none disabled:opacity-40 min-w-0"
           />
           <button
             onClick={() => sendMessage(input)}
@@ -297,7 +299,7 @@ export default function DrishtiAgent() {
             <ArrowUp size={13} className="text-white" />
           </button>
         </div>
-        <p className="text-[15px] text-[#4A5568] mt-1.5 text-center tracking-wide">
+        <p className="text-[11px] text-[#5E6C86] mt-2 text-center tracking-[0.06em]">
           Detect · Enrich · Personalize · Recommend
         </p>
       </div>

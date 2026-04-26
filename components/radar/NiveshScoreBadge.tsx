@@ -13,7 +13,7 @@ export default function NiveshScoreBadge({ score: rawScore, size = 'md' }: Props
     score >= 50 ? '#FFB800' : '#FF4560'
 
   const cfg = {
-    sm: { dim: 34, sw: 2.5, fs: 11 },
+    sm: { dim: 30, sw: 2.25, fs: 10 },
     md: { dim: 54, sw: 3.5, fs: 15 },
     lg: { dim: 68, sw: 4, fs: 20 },
   }[size]
